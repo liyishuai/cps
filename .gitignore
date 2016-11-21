@@ -3,5 +3,6 @@
 *.v.d
 *.aux
 *.bak
+*.log
 
 Makefile

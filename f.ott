@@ -1,0 +1,159 @@
+metavar a {{ tex \alpha }} ::= {{ com type variables }}
+{{ repr-locally-nameless }}
+metavar x ::= {{ com variables }}
+{{ repr-locally-nameless }}
+metavar i ::= {{ com integer literals }}
+{{ repr-locally-nameless }}
+
+grammar
+t {{ tex \tau }} :: 't_' ::= {{ com types }}
+| a            ::   :: var
+| int          ::   :: int
+| t1 -> t2     ::   :: arr
+| all a . t    ::   :: all (+ bind a in t +)
+| t1 * t2      ::   :: prod
+| ( t )        :: S :: par {{ coq ([[t]]) }}
+| t' [ t / a ] :: M :: sub {{ coq (open_t_wrt_t [[ a t' ]][[t]]) }}
+
+u, e :: 'u_' ::= {{ com terms }}
+| x                          ::   :: var
+| i                          ::   :: int
+| fix x ( x1 : t1 ) : t2 . e ::   :: fix
+| e1 e2                      ::   :: app
+| \\ a . e                   ::   :: tlam (+ bind a in e +)
+| e [ t ]                    ::   :: tapp
+| e1 * e2                    ::   :: pair
+| e prl                      ::   :: prl
+| e prr                      ::   :: prr
+| e1 p e2                    ::   :: prim
+| if0 ( e1 , e2 , e3 )       ::   :: if0
+| ( u )                      :: S :: par {{ coq ([[u]]) }}
+| u' [ u / x ]               :: M :: sub {{ coq (open_u_wrt_u [[x u']] [[u]]) }}
+| u [ t / a ]                :: M :: Sub {{ coq (open_u_wrt_t [[a u]] [[t]]) }}
+| u t                        ::   :: ann {{ tex [[u]]^[[t]] }} {{ com annotated terms }}
+
+p :: 'p_' ::= {{ com primitives }}
+| + :: :: plus
+| - :: :: minus
+
+substitutions
+  single t a :: t_subst
+  single u x :: e_subst
+
+freevars
+  u x :: e_fv
+  u a :: t_fv
+  t a :: tt_fv
+
+grammar
+D {{ tex \Delta }} :: 'd_' ::= {{ com type contexts }} {{ coq list a }}
+|       :: :: empty {{ coq [] }}
+| D , a :: :: cons  {{ coq ([[a]] :: [[D]]) }}
+
+G {{ tex \Gamma }} :: 'g_' ::= {{ com value contexts }} {{ coq list (x * t) }}
+|           :: :: empty {{ coq [] }}
+| G , x : t :: :: cons  {{ coq (([[x]], [[t]]) :: [[G]]) }}
+
+terminals :: terminals_ ::=
+| int :: :: int        {{ tex \mathbb Z }}
+| ->  :: :: to         {{ tex \to }}
+| all :: :: forall     {{ tex \forall }}
+| *   :: :: prod       {{ tex \times }}
+| fix :: :: fix        {{ tex \mathsf{fix} }}
+| \\  :: :: Lambda     {{ tex \Lambda }}
+| prl :: :: prl        {{ tex \cdot\mathtt l }}
+| prr :: :: prr        {{ tex \cdot\mathtt r }}
+| if0 :: :: if0        {{ tex \mathsf{if0} }}
+| in  :: :: in         {{ tex \in }}
+| |-F :: :: turnstileF {{ tex \vdash_\mathrm F }}
+
+formula :: formula_ ::=
+| judgement   :: :: judgement
+| a in D      :: :: inD {{ coq In [[a]] [[D]] }}
+| G ( x ) = t :: :: inG {{ coq In ([[x]], [[t]]) [[G]] }}
+
+defns
+Jtype :: '' ::=
+
+defn
+D |-F t :: :: type :: 'type_' {{ com type formation }}
+by
+
+a in D
+------- :: var
+D |-F a
+
+--------- :: int
+D |-F int
+
+D |-F t1
+D |-F t2
+-------------- :: arr
+D |-F t1 -> t2
+
+D , a |-F t
+--------------- :: all
+D |-F all a . t
+
+defns Jterm :: '' ::=
+
+defn
+D ; G |-F u : t :: :: term :: 'term_' {{ com typing }}
+by
+
+D ; G |-F u : t
+----------------- :: ann
+D ; G |-F u t : t
+
+D |-F t
+G ( x ) = t
+--------------- :: var
+D ; G |-F x : t
+
+----------------- :: int
+D ; G |-F i : int
+
+D |-F t1
+D |-F t2
+D ; G , x : t1 -> t2 , x1 : t1 |-F u : t2
+----------------------------------------------- :: fix
+D ; G |-F fix x ( x1 : t1 ) : t2 . u : t1 -> t2
+
+D ; G |-F e1 : t1 -> t2
+D ; G |-F e2 : t1
+----------------------- :: app
+D ; G |-F e1 e2 : t2
+
+D , a ; G |-F e : t
+------------------------------ :: tlam
+D ; G |-F \\ a . e : all a . t
+
+D |-F t
+D ; G |-F e : all a . t'
+-------------------------------- :: tapp
+D ; G |-F e [ t ] : t' [ t / a ]
+
+D ; G |-F e1 : t1
+D ; G |-F e2 : t2
+--------------------------- :: pair
+D ; G |-F e1 * e2 : t1 * t2
+
+D ; G |-F e : t1 * t2
+--------------------- :: prl
+D ; G |-F e prl : t1
+
+D ; G |-F e : t1 * t2
+--------------------- :: prr
+D ; G |-F e prr : t2
+
+D ; G |-F e1 : int
+D ; G |-F e2 : int
+----------------------- :: prim
+D ; G |-F e1 p e2 : int
+
+D ; G |-F e1 : int
+D ; G |-F e2 : t
+D ; G |-F e3 : t
+---------------------------------- :: if0
+D ; G |-F if0 ( e1 , e2 , e3 ) : t
+
