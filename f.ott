@@ -2,8 +2,8 @@ metavar a {{ tex \alpha }} ::= {{ com type variables }}
 {{ repr-locally-nameless }}
 metavar x ::= {{ com variables }}
 {{ repr-locally-nameless }}
-metavar i ::= {{ com integer literals }}
-{{ repr-locally-nameless }}
+metavar i ::= {{ com integer literals }} {{ coq nat }}
+
 
 grammar
 t {{ tex \tau }} :: 't_' ::= {{ com types }}
@@ -18,7 +18,8 @@ t {{ tex \tau }} :: 't_' ::= {{ com types }}
 u, e :: 'u_' ::= {{ com terms }}
 | x                          ::   :: var
 | i                          ::   :: int
-| fix x ( x1 : t1 ) : t2 . e ::   :: fix
+| fix x : t1 -> t2 . e       ::   :: fix  (+ bind x in e +)
+| \\ ( x1 : t1 ) . e         ::   :: lam  (+ bind x1 in e +)
 | e1 e2                      ::   :: app
 | \\ a . e                   ::   :: tlam (+ bind a in e +)
 | e [ t ]                    ::   :: tapp
@@ -39,6 +40,7 @@ p :: 'p_' ::= {{ com primitives }}
 substitutions
   single t a :: t_subst
   single u x :: e_subst
+  single u a :: et_subst
 
 freevars
   u x :: e_fv
@@ -114,10 +116,16 @@ D ; G |-F x : t
 D ; G |-F i : int
 
 D |-F t1
+D ; G , x1 : t1 |-F u : t2
+----------------------------------------------- :: lam
+D ; G |-F \\ ( x1 : t1 ) . u : t1 -> t2
+
+
+D |-F t1
 D |-F t2
-D ; G , x : t1 -> t2 , x1 : t1 |-F u : t2
+D ; G , x : t1 -> t2 |-F u : t1 -> t2
 ----------------------------------------------- :: fix
-D ; G |-F fix x ( x1 : t1 ) : t2 . u : t1 -> t2
+D ; G |-F fix x : t1 -> t2 . u : t1 -> t2
 
 D ; G |-F e1 : t1 -> t2
 D ; G |-F e2 : t1
