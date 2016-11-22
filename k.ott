@@ -25,13 +25,14 @@ p :: 'p_' ::= {{ com primitives }}
 | - :: :: minus
 
 d :: 'd_' ::= {{ com declarations }}
-| x = v       :: :: val
-| x = v prl   :: :: prl
-| x = v prr   :: :: prr
-| x = v1 p v2 :: :: prim
+| v       :: :: val  
+| v prl   :: :: prl  
+| v prr   :: :: prr  
+| v1 p v2 :: :: prim 
 
 e :: 'e_' ::= {{ com terms }}
-| let d in e          :: :: let
+| let x = d in e      :: :: let
+  (+ bind x in e +)
 | v' [ t ] ( v )      :: :: app
 | if0 ( v , e1 , e2 ) :: :: if0
 | halt [ t ] v        :: :: halt
