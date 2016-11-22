@@ -1,0 +1,131 @@
+metavar a {{ tex \alpha }} ::= {{ com type variables }}
+{{ repr-locally-nameless }}
+metavar x ::= {{ com variables }}
+{{ repr-locally-nameless }}
+metavar i ::= {{ com integer literals }} {{ coq nat }}
+
+grammar
+t {{ tex \tau }}, s {{ tex \sigma }} :: 't_' ::= {{ com types }}
+| a                 ::   :: var
+| int               ::   :: int
+| all a . t -> void ::   :: all (+ bind a in t +)
+| t1 * t2           ::   :: prod
+| ( t )             :: S :: par {{ coq ([[t]]) }}
+| t' [ t / a ]      :: M :: sub {{ coq (open_t_wrt_t [[ a t' ]][[t]]) }}
+
+u , v :: 'u_' ::= {{ com values }}
+| x             ::   :: var
+| i             ::   :: int
+| v1 * v2       ::   :: pair
+| ( u )         :: S :: par {{ coq ([[u]]) }}
+| u t           ::   :: ann {{ tex [[u]]^[[t]] }} {{ com annotated values }}
+
+p :: 'p_' ::= {{ com primitives }}
+| + :: :: plus
+| - :: :: minus
+
+d :: 'd_' ::= {{ com declarations }}
+| x = v       :: :: val
+| x = v prl   :: :: prl
+| x = v prr   :: :: prr
+| x = v1 p v2 :: :: prim
+
+e :: 'e_' ::= {{ com terms }}
+| let d in e          :: :: let
+| v' [ t ] ( v )      :: :: app
+| if0 ( v , e1 , e2 ) :: :: if0
+| halt [ t ] v        :: :: halt
+
+substitutions
+  single t a :: t_subst
+  single u x :: e_subst
+  single u a :: et_subst
+
+freevars
+  u x :: e_fv
+  u a :: t_fv
+  t a :: tt_fv
+
+grammar
+D {{ tex \Delta }} :: 'd_' ::= {{ com type contexts }} {{ coq list a }}
+|       :: :: empty {{ coq [] }}
+| D , a :: :: cons  {{ coq ([[a]] :: [[D]]) }}
+
+G {{ tex \Gamma }} :: 'g_' ::= {{ com value contexts }} {{ coq list (x * t) }}
+|           :: :: empty {{ coq [] }}
+| G , x : t :: :: cons  {{ coq (([[x]], [[t]]) :: [[G]]) }}
+
+terminals :: terminals_ ::=
+| int :: :: int {{ tex \mathbb Z }}
+| -> :: :: to {{ tex \to }}
+| all :: :: forall {{ tex \forall }}
+| void :: :: void {{ tex \mathtt{void} }}
+| * :: :: prod {{ tex \times }}
+| fix :: :: fix {{ tex \mathsf{fix} }}
+| prl :: :: prl {{ tex \cdot\mathtt l }}
+| prr :: :: prr {{ tex \cdot\mathtt r }}
+| let :: :: let {{ tex \mathsf{let} }}
+| in :: :: In {{ tex \mathsf{in} }}
+| if0 :: :: if0 {{ tex \mathsf{if0} }}
+| halt :: :: halt {{ tex \mathsf{halt} }}
+| \in :: :: in {{ tex \in }}
+| |-K :: :: turnstileK {{ tex \vdash_\mathrm K }}
+
+formula :: formula_ ::=
+| judgement :: :: judgement
+| a \in D :: :: inD {{ coq In [[a]] [[D]] }}
+| G ( x ) = t :: :: inG {{ coq In ([[x]], [[t]]) [[G]] }}
+
+defns
+Jtype :: '' ::=
+
+defn
+D |-K t :: :: type :: 'type_' {{ com type formation }}
+by
+
+a \in D
+------- :: var
+D |-K a
+
+--------- :: int
+D |-K int
+
+D , a |-K t
+----------------------- :: all
+D |-K all a . t -> void
+
+D |-K t1
+D |-K t2
+------------- :: prod
+D |-K t1 * t2
+
+defns Jvalue :: '' ::=
+
+defn
+D ; G |-K u : t :: :: value :: 'value_' {{ com typing }}
+by
+
+D ; G |-K u : t
+----------------- :: ann
+D ; G |-K u t : t
+
+D |-K t
+G ( x ) = t
+--------------- :: var
+D ; G |-K x : t
+
+----------------- :: int
+D ; G |-K i : int
+
+defns Jterm :: '' ::=
+
+defn
+D ; G |-K e :: :: term :: 'term_' {{ com term formation }}
+by
+
+D ; G |-K v : t
+D ; G , x : t |-K e
+------------------------ :: let
+D ; G |-K let x = v in e
+
+

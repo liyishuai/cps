@@ -19,7 +19,7 @@ u, e :: 'u_' ::= {{ com terms }}
 | x                          ::   :: var
 | i                          ::   :: int
 | fix x : t1 -> t2 . e       ::   :: fix  (+ bind x in e +)
-| \\ ( x1 : t1 ) . e         ::   :: lam  (+ bind x1 in e +)
+| \ ( x1 : t1 ) . e          ::   :: lam  (+ bind x1 in e +)
 | e1 e2                      ::   :: app
 | \\ a . e                   ::   :: tlam (+ bind a in e +)
 | e [ t ]                    ::   :: tapp
@@ -62,6 +62,7 @@ terminals :: terminals_ ::=
 | all :: :: forall     {{ tex \forall }}
 | *   :: :: prod       {{ tex \times }}
 | fix :: :: fix        {{ tex \mathsf{fix} }}
+| \   :: :: lambda     {{ tex \lambda }}
 | \\  :: :: Lambda     {{ tex \Lambda }}
 | prl :: :: prl        {{ tex \cdot\mathtt l }}
 | prr :: :: prr        {{ tex \cdot\mathtt r }}
@@ -96,6 +97,11 @@ D |-F t1 -> t2
 D , a |-F t
 --------------- :: all
 D |-F all a . t
+
+D |-F t1
+D |-F t2
+------------- :: prod
+D |-F t1 * t2
 
 defns Jterm :: '' ::=
 

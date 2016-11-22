@@ -1,3 +1,5 @@
 -R metalib Metalib
 f_ott.v
 f_inf.v
+k_ott.v
+k_inf.v
