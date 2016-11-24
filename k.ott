@@ -8,17 +8,27 @@ grammar
 t {{ tex \tau }}, s {{ tex \sigma }} :: 't_' ::= {{ com types }}
 | a                 ::   :: var
 | int               ::   :: int
-| all a . t -> void ::   :: all (+ bind a in t +)
+| void              ::   :: void
+| t1 -> t2          ::   :: arr
+| all a . t         ::   :: all (+ bind a in t +)
 | t1 * t2           ::   :: prod
 | ( t )             :: S :: par {{ coq ([[t]]) }}
 | t' [ t / a ]      :: M :: sub {{ coq (open_t_wrt_t [[ a t' ]][[t]]) }}
 
-u , v :: 'u_' ::= {{ com values }}
+v :: 'v_' ::= {{ com annotated values }}
+| u t :: :: ann {{ tex [[u]]^[[t]] }}
+
+u :: 'u_' ::= {{ com values }}
 | x             ::   :: var
 | i             ::   :: int
+| \ ( x : t ) . v :: :: lam (+ bind x in v +)
+| v1 v2         ::   :: app
 | v1 * v2       ::   :: pair
+| v prl         ::   :: prl
+| v prr         ::   :: prr
+| v1 p v2       ::   :: prim
+| if0 ( v1 , v2 , v3 ) :: :: if0
 | ( u )         :: S :: par {{ coq ([[u]]) }}
-| u t           ::   :: ann {{ tex [[u]]^[[t]] }} {{ com annotated values }}
 
 p :: 'p_' ::= {{ com primitives }}
 | + :: :: plus
@@ -62,6 +72,7 @@ terminals :: terminals_ ::=
 | all :: :: forall {{ tex \forall }}
 | void :: :: void {{ tex \mathtt{void} }}
 | * :: :: prod {{ tex \times }}
+| \ :: :: lambda {{ tex \lambda }}
 | fix :: :: fix {{ tex \mathsf{fix} }}
 | prl :: :: prl {{ tex \cdot\mathtt l }}
 | prr :: :: prr {{ tex \cdot\mathtt r }}
@@ -70,6 +81,7 @@ terminals :: terminals_ ::=
 | if0 :: :: if0 {{ tex \mathsf{if0} }}
 | halt :: :: halt {{ tex \mathsf{halt} }}
 | \in :: :: in {{ tex \in }}
+| |-F :: :: turnstileF {{ tex \vdash_\mathrm F }}
 | |-K :: :: turnstileK {{ tex \vdash_\mathrm K }}
 
 formula :: formula_ ::=
@@ -78,7 +90,89 @@ formula :: formula_ ::=
 | G ( x ) = t :: :: inG {{ coq In ([[x]], [[t]]) [[G]] }}
 
 defns
-Jtype :: '' ::=
+F :: 'F_' ::=
+
+defn
+D |-F t :: :: type :: 'type_' {{ com type formation }}
+by
+
+a \in D
+------- :: var
+D |-F a
+
+--------- :: int
+D |-F int
+
+D |-F t1
+D |-F t2
+-------------- :: arr
+D |-F t1 -> t2
+
+D , a |-F t
+--------------- :: all
+D |-F all a . t
+
+D |-F t1
+D |-F t2
+------------- :: prod
+D |-F t1 * t2
+
+defn
+D ; G |-F v : t :: :: anv :: 'anv_' {{ com annotated typing }}
+by
+
+D ; G |-F u : t
+----------------- :: ann
+D ; G |-F u t : t
+
+defn
+D ; G |-F u : t :: :: value :: 'value_' {{ com typing }}
+by
+
+D |-F t
+G ( x ) = t
+--------------- :: var
+D ; G |-F x : t
+
+----------------- :: int
+D ; G |-F i : int
+
+D |-F t1
+D ; G , x1 : t1 |-F v : t2
+----------------------------------------------- :: lam
+D ; G |-F \ ( x1 : t1 ) . v : t1 -> t2
+
+D ; G |-F v1 : t1 -> t2
+D ; G |-F v2 : t1
+----------------------- :: app
+D ; G |-F v1 v2 : t2
+
+D ; G |-F v1 : t1
+D ; G |-F v2 : t2
+--------------------------- :: pair
+D ; G |-F v1 * v2 : t1 * t2
+
+D ; G |-F v : t1 * t2
+--------------------- :: prl
+D ; G |-F v prl : t1
+
+D ; G |-F v : t1 * t2
+--------------------- :: prr
+D ; G |-F v prr : t2
+
+D ; G |-F v1 : int
+D ; G |-F v2 : int
+----------------------- :: prim
+D ; G |-F v1 p v2 : int
+
+D ; G |-F v1 : int
+D ; G |-F v2 : t
+D ; G |-F v3 : t
+---------------------------------- :: if0
+D ; G |-F if0 ( v1 , v2 , v3 ) : t
+
+defns
+K :: 'K_' ::=
 
 defn
 D |-K t :: :: type :: 'type_' {{ com type formation }}
@@ -100,15 +194,16 @@ D |-K t2
 ------------- :: prod
 D |-K t1 * t2
 
-defns Jvalue :: '' ::=
+defn
+D ; G |-K v : t :: :: anv :: 'anv_' {{ com annotated typing }}
+by
+D ; G |-K u : t
+----------------- :: ann
+D ; G |-K u t : t
 
 defn
 D ; G |-K u : t :: :: value :: 'value_' {{ com typing }}
 by
-
-D ; G |-K u : t
------------------ :: ann
-D ; G |-K u t : t
 
 D |-K t
 G ( x ) = t
@@ -117,8 +212,6 @@ D ; G |-K x : t
 
 ----------------- :: int
 D ; G |-K i : int
-
-defns Jterm :: '' ::=
 
 defn
 D ; G |-K e :: :: term :: 'term_' {{ com term formation }}
@@ -129,4 +222,6 @@ D ; G , x : t |-K e
 ------------------------ :: let
 D ; G |-K let x = v in e
 
+parsing
+t_all <= t_arr
 
