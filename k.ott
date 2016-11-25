@@ -22,6 +22,7 @@ u :: 'u_' ::= {{ com values }}
 | x             ::   :: var
 | i             ::   :: int
 | \ ( x : t ) . v :: :: lam (+ bind x in v +)
+| \ ( x : t ) . e :: :: Lam (+ bind x in e +)
 | v1 v2         ::   :: app
 | v1 * v2       ::   :: pair
 | v prl         ::   :: prl
@@ -43,7 +44,7 @@ d :: 'd_' ::= {{ com declarations }}
 e :: 'e_' ::= {{ com terms }}
 | let x = d in e      :: :: let
   (+ bind x in e +)
-| v' [ t ] ( v )      :: :: app
+| v' ( v )            :: :: app
 | if0 ( v , e1 , e2 ) :: :: if0
 | halt [ t ] v        :: :: halt
 
@@ -185,9 +186,9 @@ D |-K a
 --------- :: int
 D |-K int
 
-D , a |-K t
------------------------ :: all
-D |-K all a . t -> void
+D |-K t
+--------------- :: arr
+D |-K t -> void
 
 D |-K t1
 D |-K t2
@@ -213,6 +214,15 @@ D ; G |-K x : t
 ----------------- :: int
 D ; G |-K i : int
 
+D ; G , x : t |-K e
+------------------------------------- :: Lam
+D ; G |-K \ ( x : t ) . e : t -> void
+
+D ; G |-K v1 : t1
+D ; G |-K v2 : t2
+--------------------------- :: pair
+D ; G |-K v1 * v2 : t1 * t2
+
 defn
 D ; G |-K e :: :: term :: 'term_' {{ com term formation }}
 by
@@ -221,6 +231,37 @@ D ; G |-K v : t
 D ; G , x : t |-K e
 ------------------------ :: let
 D ; G |-K let x = v in e
+
+D ; G |-K v : t1 * t2
+D ; G , x : t1 |-K e
+---------------------------- :: prl
+D ; G |-K let x = v prl in e
+
+D ; G |-K v : t1 * t2
+D ; G , x : t2 |-K e
+---------------------------- :: prr
+D ; G |-K let x = v prr in e
+
+D ; G |-K v1 : int
+D ; G |-K v2 : int
+D ; G , x : int |-K e
+------------------------------ :: prim
+D ; G |-K let x = v1 p v2 in e
+
+D ; G |-K v' : t -> void
+D ; G |-K v : t
+------------------------ :: app
+D ; G |-K v' ( v )
+
+D ; G |-K v : int
+D ; G |-K e1
+D ; G |-K e2
+----------------------------- :: if0
+D ; G |-K if0 ( v , e1 , e2 )
+
+D ; G |-K v : t
+---------------------- :: halt
+D ; G |-K halt [ t ] v
 
 parsing
 t_all <= t_arr
