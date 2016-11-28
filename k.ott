@@ -15,47 +15,37 @@ t {{ tex \tau }}, s {{ tex \sigma }} :: 't_' ::= {{ com types }}
 | ( t )             :: S :: par {{ coq ([[t]]) }}
 | t' [ t / a ]      :: M :: sub {{ coq (open_t_wrt_t [[ a t' ]][[t]]) }}
 
-v :: 'v_' ::= {{ com annotated values }}
+e :: 'e_' ::= {{ com annotated terms }}
 | u t :: :: ann {{ tex [[u]]^[[t]] }}
+| e [ u / x ] :: M :: sub {{ coq (open_e_wrt_u [[x e]] [[u]]) }}
 
-u :: 'u_' ::= {{ com values }}
+u :: 'u_' ::= {{ com raw terms }}
 | x             ::   :: var
 | i             ::   :: int
-| \ ( x : t ) . v :: :: lam (+ bind x in v +)
-| \ ( x : t ) . e :: :: Lam (+ bind x in e +)
-| v1 v2         ::   :: app
-| v1 * v2       ::   :: pair
-| v prl         ::   :: prl
-| v prr         ::   :: prr
-| v1 p v2       ::   :: prim
-| if0 ( v1 , v2 , v3 ) :: :: if0
+| \ ( x : t ) . e :: :: lam (+ bind x in e +)
+| e1 e2         ::   :: app
+| e1 * e2       ::   :: pair
+| e prl         ::   :: prl
+| e prr         ::   :: prr
+| e1 p e2       ::   :: prim
+| if0 ( e1 , e2 , e3 ) :: :: if0
+| let x = e in u ::  :: let (+ bind x in u +)
+| halt e        ::   :: halt
 | ( u )         :: S :: par {{ coq ([[u]]) }}
+| u' [ u / x ]  :: M :: sub {{ coq (open_u_wrt_u [[x u']] [[u]]) }}
 
 p :: 'p_' ::= {{ com primitives }}
 | + :: :: plus
 | - :: :: minus
 
-d :: 'd_' ::= {{ com declarations }}
-| v       :: :: val  
-| v prl   :: :: prl  
-| v prr   :: :: prr  
-| v1 p v2 :: :: prim 
-
-e :: 'e_' ::= {{ com terms }}
-| let x = d in e      :: :: let
-  (+ bind x in e +)
-| v' ( v )            :: :: app
-| if0 ( v , e1 , e2 ) :: :: if0
-| halt [ t ] v        :: :: halt
-
 substitutions
   single t a :: t_subst
-  single u x :: e_subst
-  single u a :: et_subst
+  single e x :: e_subst
+  single u x :: u_subst
 
 freevars
-  u x :: e_fv
-  u a :: t_fv
+  e x :: e_fv
+  u x :: u_fv
   t a :: tt_fv
 
 grammar
@@ -119,7 +109,7 @@ D |-F t2
 D |-F t1 * t2
 
 defn
-D ; G |-F v : t :: :: anv :: 'anv_' {{ com annotated typing }}
+D ; G |-F e : t :: :: ant :: 'ant_' {{ com annotated typing }}
 by
 
 D ; G |-F u : t
@@ -127,7 +117,7 @@ D ; G |-F u : t
 D ; G |-F u t : t
 
 defn
-D ; G |-F u : t :: :: value :: 'value_' {{ com typing }}
+D ; G |-F u : t :: :: term :: 'term_' {{ com typing }}
 by
 
 D |-F t
@@ -139,38 +129,38 @@ D ; G |-F x : t
 D ; G |-F i : int
 
 D |-F t1
-D ; G , x1 : t1 |-F v : t2
+D ; G , x1 : t1 |-F e : t2
 ----------------------------------------------- :: lam
-D ; G |-F \ ( x1 : t1 ) . v : t1 -> t2
+D ; G |-F \ ( x1 : t1 ) . e : t1 -> t2
 
-D ; G |-F v1 : t1 -> t2
-D ; G |-F v2 : t1
+D ; G |-F e1 : t1 -> t2
+D ; G |-F e2 : t1
 ----------------------- :: app
-D ; G |-F v1 v2 : t2
+D ; G |-F e1 e2 : t2
 
-D ; G |-F v1 : t1
-D ; G |-F v2 : t2
+D ; G |-F e1 : t1
+D ; G |-F e2 : t2
 --------------------------- :: pair
-D ; G |-F v1 * v2 : t1 * t2
+D ; G |-F e1 * e2 : t1 * t2
 
-D ; G |-F v : t1 * t2
+D ; G |-F e : t1 * t2
 --------------------- :: prl
-D ; G |-F v prl : t1
+D ; G |-F e prl : t1
 
-D ; G |-F v : t1 * t2
+D ; G |-F e : t1 * t2
 --------------------- :: prr
-D ; G |-F v prr : t2
+D ; G |-F e prr : t2
 
-D ; G |-F v1 : int
-D ; G |-F v2 : int
+D ; G |-F e1 : int
+D ; G |-F e2 : int
 ----------------------- :: prim
-D ; G |-F v1 p v2 : int
+D ; G |-F e1 p e2 : int
 
-D ; G |-F v1 : int
-D ; G |-F v2 : t
-D ; G |-F v3 : t
+D ; G |-F e1 : int
+D ; G |-F e2 : t
+D ; G |-F e3 : t
 ---------------------------------- :: if0
-D ; G |-F if0 ( v1 , v2 , v3 ) : t
+D ; G |-F if0 ( e1 , e2 , e3 ) : t
 
 defns
 K :: 'K_' ::=
@@ -196,14 +186,14 @@ D |-K t2
 D |-K t1 * t2
 
 defn
-D ; G |-K v : t :: :: anv :: 'anv_' {{ com annotated typing }}
+D ; G |-K e : t :: :: ant :: 'ant_' {{ com annotated typing }}
 by
 D ; G |-K u : t
 ----------------- :: ann
 D ; G |-K u t : t
 
 defn
-D ; G |-K u : t :: :: value :: 'value_' {{ com typing }}
+D ; G |-K u : t :: :: term :: 'term_' {{ com typing }}
 by
 
 D |-K t
@@ -214,54 +204,47 @@ D ; G |-K x : t
 ----------------- :: int
 D ; G |-K i : int
 
-D ; G , x : t |-K e
+D ; G , x : t |-K e : void
 ------------------------------------- :: Lam
 D ; G |-K \ ( x : t ) . e : t -> void
 
-D ; G |-K v1 : t1
-D ; G |-K v2 : t2
+D ; G |-K e1 : t1
+D ; G |-K e2 : t2
 --------------------------- :: pair
-D ; G |-K v1 * v2 : t1 * t2
+D ; G |-K e1 * e2 : t1 * t2
 
-defn
-D ; G |-K e :: :: term :: 'term_' {{ com term formation }}
-by
-
-D ; G |-K v : t
-D ; G , x : t |-K e
+D ; G |-K e : t
+D ; G , x : t |-K u : void
 ------------------------ :: let
-D ; G |-K let x = v in e
+D ; G |-K let x = e in u : void
 
-D ; G |-K v : t1 * t2
-D ; G , x : t1 |-K e
+D ; G |-K e : t1 * t2
 ---------------------------- :: prl
-D ; G |-K let x = v prl in e
+D ; G |-K e prl : t1
 
-D ; G |-K v : t1 * t2
-D ; G , x : t2 |-K e
+D ; G |-K e : t1 * t2
 ---------------------------- :: prr
-D ; G |-K let x = v prr in e
+D ; G |-K e prr : t2
 
-D ; G |-K v1 : int
-D ; G |-K v2 : int
-D ; G , x : int |-K e
+D ; G |-K e1 : int
+D ; G |-K e2 : int
 ------------------------------ :: prim
-D ; G |-K let x = v1 p v2 in e
+D ; G |-K e1 p e2 : int
 
-D ; G |-K v' : t -> void
-D ; G |-K v : t
+D ; G |-K e' : t -> void
+D ; G |-K e : t
 ------------------------ :: app
-D ; G |-K v' ( v )
+D ; G |-K e' e : void
 
-D ; G |-K v : int
-D ; G |-K e1
-D ; G |-K e2
+D ; G |-K e : int
+D ; G |-K e1 : void
+D ; G |-K e2 : void
 ----------------------------- :: if0
-D ; G |-K if0 ( v , e1 , e2 )
+D ; G |-K if0 ( e , e1 , e2 ) : void
 
-D ; G |-K v : t
+D ; G |-K e : t
 ---------------------- :: halt
-D ; G |-K halt [ t ] v
+D ; G |-K halt e : void
 
 parsing
 t_all <= t_arr
