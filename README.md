@@ -1,2 +1,2 @@
 # cps
-Conversion from System F to continuation-passing style (CPS)
+Conversion from System T to continuation-passing style (CPS)

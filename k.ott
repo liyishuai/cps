@@ -1,19 +1,14 @@
-metavar a {{ tex \alpha }} ::= {{ com type variables }}
-{{ repr-locally-nameless }}
 metavar x ::= {{ com variables }}
 {{ repr-locally-nameless }}
 metavar i ::= {{ com integer literals }} {{ coq nat }}
 
 grammar
 t {{ tex \tau }}, s {{ tex \sigma }} :: 't_' ::= {{ com types }}
-| a                 ::   :: var
 | int               ::   :: int
 | void              ::   :: void
 | t1 -> t2          ::   :: arr
-| all a . t         ::   :: all (+ bind a in t +)
 | t1 * t2           ::   :: prod
 | ( t )             :: S :: par {{ coq ([[t]]) }}
-| t' [ t / a ]      :: M :: sub {{ coq (open_t_wrt_t [[ a t' ]][[t]]) }}
 
 e :: 'e_' ::= {{ com annotated terms }}
 | u t :: :: ann {{ tex [[u]]^[[t]] }}
@@ -39,21 +34,15 @@ p :: 'p_' ::= {{ com primitives }}
 | - :: :: minus
 
 substitutions
-  single t a :: t_subst
   single e x :: e_subst
   single u x :: u_subst
 
 freevars
   e x :: e_fv
   u x :: u_fv
-  t a :: tt_fv
 
 grammar
-D {{ tex \Delta }} :: 'd_' ::= {{ com type contexts }} {{ coq list a }}
-|       :: :: empty {{ coq [] }}
-| D , a :: :: cons  {{ coq ([[a]] :: [[D]]) }}
-
-G {{ tex \Gamma }} :: 'g_' ::= {{ com value contexts }} {{ coq list (x * t) }}
+G {{ tex \Gamma }} :: 'g_' ::= {{ com contexts }} {{ coq list (x * t) }}
 |           :: :: empty {{ coq [] }}
 | G , x : t :: :: cons  {{ coq (([[x]], [[t]]) :: [[G]]) }}
 
@@ -72,180 +61,127 @@ terminals :: terminals_ ::=
 | if0 :: :: if0 {{ tex \mathsf{if0} }}
 | halt :: :: halt {{ tex \mathsf{halt} }}
 | \in :: :: in {{ tex \in }}
-| |-F :: :: turnstileF {{ tex \vdash_\mathrm F }}
+| |-F :: :: turnstileF {{ tex \vdash_\mathrm T }}
 | |-K :: :: turnstileK {{ tex \vdash_\mathrm K }}
 
 formula :: formula_ ::=
 | judgement :: :: judgement
-| a \in D :: :: inD {{ coq In [[a]] [[D]] }}
 | G ( x ) = t :: :: inG {{ coq In ([[x]], [[t]]) [[G]] }}
 
 defns
-F :: 'F_' ::=
+F :: 'T_' ::=
 
 defn
-D |-F t :: :: type :: 'type_' {{ com type formation }}
+G |-F e : t :: :: ant :: 'ant_' {{ com annotated typing }}
 by
 
-a \in D
-------- :: var
-D |-F a
-
---------- :: int
-D |-F int
-
-D |-F t1
-D |-F t2
--------------- :: arr
-D |-F t1 -> t2
-
-D , a |-F t
---------------- :: all
-D |-F all a . t
-
-D |-F t1
-D |-F t2
-------------- :: prod
-D |-F t1 * t2
-
-defn
-D ; G |-F e : t :: :: ant :: 'ant_' {{ com annotated typing }}
-by
-
-D ; G |-F u : t
+G |-F u : t
 ----------------- :: ann
-D ; G |-F u t : t
+G |-F u t : t
 
 defn
-D ; G |-F u : t :: :: term :: 'term_' {{ com typing }}
+G |-F u : t :: :: term :: 'term_' {{ com typing }}
 by
 
-D |-F t
 G ( x ) = t
 --------------- :: var
-D ; G |-F x : t
+G |-F x : t
 
 ----------------- :: int
-D ; G |-F i : int
+G |-F i : int
 
-D |-F t1
-D ; G , x1 : t1 |-F e : t2
+G , x1 : t1 |-F e : t2
 ----------------------------------------------- :: lam
-D ; G |-F \ ( x1 : t1 ) . e : t1 -> t2
+G |-F \ ( x1 : t1 ) . e : t1 -> t2
 
-D ; G |-F e1 : t1 -> t2
-D ; G |-F e2 : t1
+G |-F e1 : t1 -> t2
+G |-F e2 : t1
 ----------------------- :: app
-D ; G |-F e1 e2 : t2
+G |-F e1 e2 : t2
 
-D ; G |-F e1 : t1
-D ; G |-F e2 : t2
+G |-F e1 : t1
+G |-F e2 : t2
 --------------------------- :: pair
-D ; G |-F e1 * e2 : t1 * t2
+G |-F e1 * e2 : t1 * t2
 
-D ; G |-F e : t1 * t2
+G |-F e : t1 * t2
 --------------------- :: prl
-D ; G |-F e prl : t1
+G |-F e prl : t1
 
-D ; G |-F e : t1 * t2
+G |-F e : t1 * t2
 --------------------- :: prr
-D ; G |-F e prr : t2
+G |-F e prr : t2
 
-D ; G |-F e1 : int
-D ; G |-F e2 : int
+G |-F e1 : int
+G |-F e2 : int
 ----------------------- :: prim
-D ; G |-F e1 p e2 : int
+G |-F e1 p e2 : int
 
-D ; G |-F e1 : int
-D ; G |-F e2 : t
-D ; G |-F e3 : t
+G |-F e1 : int
+G |-F e2 : t
+G |-F e3 : t
 ---------------------------------- :: if0
-D ; G |-F if0 ( e1 , e2 , e3 ) : t
+G |-F if0 ( e1 , e2 , e3 ) : t
 
 defns
 K :: 'K_' ::=
 
 defn
-D |-K t :: :: type :: 'type_' {{ com type formation }}
+G |-K e : t :: :: ant :: 'ant_' {{ com annotated typing }}
 by
-
-a \in D
-------- :: var
-D |-K a
-
---------- :: int
-D |-K int
-
-D |-K t
---------------- :: arr
-D |-K t -> void
-
-D |-K t1
-D |-K t2
-------------- :: prod
-D |-K t1 * t2
-
-defn
-D ; G |-K e : t :: :: ant :: 'ant_' {{ com annotated typing }}
-by
-D ; G |-K u : t
+G |-K u : t
 ----------------- :: ann
-D ; G |-K u t : t
+G |-K u t : t
 
 defn
-D ; G |-K u : t :: :: term :: 'term_' {{ com typing }}
+G |-K u : t :: :: term :: 'term_' {{ com typing }}
 by
 
-D |-K t
 G ( x ) = t
 --------------- :: var
-D ; G |-K x : t
+G |-K x : t
 
 ----------------- :: int
-D ; G |-K i : int
+G |-K i : int
 
-D ; G , x : t |-K e : void
+G , x : t |-K e : void
 ------------------------------------- :: Lam
-D ; G |-K \ ( x : t ) . e : t -> void
+G |-K \ ( x : t ) . e : t -> void
 
-D ; G |-K e1 : t1
-D ; G |-K e2 : t2
+G |-K e1 : t1
+G |-K e2 : t2
 --------------------------- :: pair
-D ; G |-K e1 * e2 : t1 * t2
+G |-K e1 * e2 : t1 * t2
 
-D ; G |-K e : t
-D ; G , x : t |-K u : void
+G |-K e : t
+G , x : t |-K u : void
 ------------------------ :: let
-D ; G |-K let x = e in u : void
+G |-K let x = e in u : void
 
-D ; G |-K e : t1 * t2
+G |-K e : t1 * t2
 ---------------------------- :: prl
-D ; G |-K e prl : t1
+G |-K e prl : t1
 
-D ; G |-K e : t1 * t2
+G |-K e : t1 * t2
 ---------------------------- :: prr
-D ; G |-K e prr : t2
+G |-K e prr : t2
 
-D ; G |-K e1 : int
-D ; G |-K e2 : int
+G |-K e1 : int
+G |-K e2 : int
 ------------------------------ :: prim
-D ; G |-K e1 p e2 : int
+G |-K e1 p e2 : int
 
-D ; G |-K e' : t -> void
-D ; G |-K e : t
+G |-K e' : t -> void
+G |-K e : t
 ------------------------ :: app
-D ; G |-K e' e : void
+G |-K e' e : void
 
-D ; G |-K e : int
-D ; G |-K e1 : void
-D ; G |-K e2 : void
+G |-K e : int
+G |-K e1 : void
+G |-K e2 : void
 ----------------------------- :: if0
-D ; G |-K if0 ( e , e1 , e2 ) : void
+G |-K if0 ( e , e1 , e2 ) : void
 
-D ; G |-K e : t
+G |-K e : t
 ---------------------- :: halt
-D ; G |-K halt e : void
-
-parsing
-t_all <= t_arr
-
+G |-K halt e : void
