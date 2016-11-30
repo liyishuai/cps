@@ -24,9 +24,6 @@ with u : Set :=  (*r raw terms *)
  | u_int (i5:i)
  | u_lam (t5:t) (e5:e)
  | u_app (e1:e) (e2:e)
- | u_pair (e1:e) (e2:e)
- | u_prl (e5:e)
- | u_prr (e5:e)
  | u_prim (e1:e) (p5:p) (e2:e)
  | u_if0 (e1:e) (e2:e) (e3:e)
  | u_let (e5:e) (u5:u)
@@ -50,9 +47,6 @@ Fixpoint open_u_wrt_u_rec (k:nat) (u_6:u) (u__7:u) {struct u__7}: u :=
   | (u_int i5) => u_int i5
   | (u_lam t5 e5) => u_lam t5 (open_e_wrt_u_rec (S k) u_6 e5)
   | (u_app e1 e2) => u_app (open_e_wrt_u_rec k u_6 e1) (open_e_wrt_u_rec k u_6 e2)
-  | (u_pair e1 e2) => u_pair (open_e_wrt_u_rec k u_6 e1) (open_e_wrt_u_rec k u_6 e2)
-  | (u_prl e5) => u_prl (open_e_wrt_u_rec k u_6 e5)
-  | (u_prr e5) => u_prr (open_e_wrt_u_rec k u_6 e5)
   | (u_prim e1 p5 e2) => u_prim (open_e_wrt_u_rec k u_6 e1) p5 (open_e_wrt_u_rec k u_6 e2)
   | (u_if0 e1 e2 e3) => u_if0 (open_e_wrt_u_rec k u_6 e1) (open_e_wrt_u_rec k u_6 e2) (open_e_wrt_u_rec k u_6 e3)
   | (u_let e5 u5) => u_let (open_e_wrt_u_rec k u_6 e5) (open_u_wrt_u_rec (S k) u_6 u5)
@@ -83,16 +77,6 @@ Inductive lc_u : u -> Prop :=    (* defn lc_u *)
      (lc_e e1) ->
      (lc_e e2) ->
      (lc_u (u_app e1 e2))
- | lc_u_pair : forall (e1 e2:e),
-     (lc_e e1) ->
-     (lc_e e2) ->
-     (lc_u (u_pair e1 e2))
- | lc_u_prl : forall (e5:e),
-     (lc_e e5) ->
-     (lc_u (u_prl e5))
- | lc_u_prr : forall (e5:e),
-     (lc_e e5) ->
-     (lc_u (u_prr e5))
  | lc_u_prim : forall (e1:e) (p5:p) (e2:e),
      (lc_e e1) ->
      (lc_e e2) ->
@@ -121,9 +105,6 @@ Fixpoint u_fv_u (u_6:u) : vars :=
   | (u_int i5) => {}
   | (u_lam t5 e5) => (u_fv_e e5)
   | (u_app e1 e2) => (u_fv_e e1) \u (u_fv_e e2)
-  | (u_pair e1 e2) => (u_fv_e e1) \u (u_fv_e e2)
-  | (u_prl e5) => (u_fv_e e5)
-  | (u_prr e5) => (u_fv_e e5)
   | (u_prim e1 p5 e2) => (u_fv_e e1) \u (u_fv_e e2)
   | (u_if0 e1 e2 e3) => (u_fv_e e1) \u (u_fv_e e2) \u (u_fv_e e3)
   | (u_let e5 u5) => (u_fv_e e5) \u (u_fv_u u5)
@@ -142,9 +123,6 @@ Fixpoint u_subst_u (u_6:u) (x_6:x) (u__7:u) {struct u__7} : u :=
   | (u_int i5) => u_int i5
   | (u_lam t5 e5) => u_lam t5 (u_subst_e u_6 x_6 e5)
   | (u_app e1 e2) => u_app (u_subst_e u_6 x_6 e1) (u_subst_e u_6 x_6 e2)
-  | (u_pair e1 e2) => u_pair (u_subst_e u_6 x_6 e1) (u_subst_e u_6 x_6 e2)
-  | (u_prl e5) => u_prl (u_subst_e u_6 x_6 e5)
-  | (u_prr e5) => u_prr (u_subst_e u_6 x_6 e5)
   | (u_prim e1 p5 e2) => u_prim (u_subst_e u_6 x_6 e1) p5 (u_subst_e u_6 x_6 e2)
   | (u_if0 e1 e2 e3) => u_if0 (u_subst_e u_6 x_6 e1) (u_subst_e u_6 x_6 e2) (u_subst_e u_6 x_6 e3)
   | (u_let e5 u5) => u_let (u_subst_e u_6 x_6 e5) (u_subst_u u_6 x_6 u5)
@@ -176,16 +154,6 @@ with T_term : G -> u -> t -> Prop :=    (* defn term *)
      T_ant G5 e1 (t_arr t1 t2) ->
      T_ant G5 e2 t1 ->
      T_term G5 (u_app e1 e2) t2
- | T_term_pair : forall (G5:G) (e1 e2:e) (t1 t2:t),
-     T_ant G5 e1 t1 ->
-     T_ant G5 e2 t2 ->
-     T_term G5 (u_pair e1 e2) (t_prod t1 t2)
- | T_term_prl : forall (G5:G) (e5:e) (t1 t2:t),
-     T_ant G5 e5 (t_prod t1 t2) ->
-     T_term G5 (u_prl e5) t1
- | T_term_prr : forall (G5:G) (e5:e) (t2 t1:t),
-     T_ant G5 e5 (t_prod t1 t2) ->
-     T_term G5 (u_prr e5) t2
  | T_term_prim : forall (G5:G) (e1:e) (p5:p) (e2:e),
      T_ant G5 e1 t_int ->
      T_ant G5 e2 t_int ->
@@ -210,20 +178,10 @@ with K_term : G -> u -> t -> Prop :=    (* defn term *)
  | K_term_Lam : forall (L:vars) (G5:G) (t5:t) (e5:e),
       ( forall x5 , x5 \notin  L  -> K_ant  (( x5 ,  t5 ) ::  G5 )   ( open_e_wrt_u e5 (u_var_f x5) )  t_void )  ->
      K_term G5 (u_lam t5 e5) (t_arr t5 t_void)
- | K_term_pair : forall (G5:G) (e1 e2:e) (t1 t2:t),
-     K_ant G5 e1 t1 ->
-     K_ant G5 e2 t2 ->
-     K_term G5 (u_pair e1 e2) (t_prod t1 t2)
  | K_term_let : forall (L:vars) (G5:G) (e5:e) (u5:u) (t5:t),
      K_ant G5 e5 t5 ->
       ( forall x5 , x5 \notin  L  -> K_term  (( x5 ,  t5 ) ::  G5 )   ( open_u_wrt_u u5 (u_var_f x5) )  t_void )  ->
      K_term G5 (u_let e5 u5) t_void
- | K_term_prl : forall (G5:G) (e5:e) (t1 t2:t),
-     K_ant G5 e5 (t_prod t1 t2) ->
-     K_term G5 (u_prl e5) t1
- | K_term_prr : forall (G5:G) (e5:e) (t2 t1:t),
-     K_ant G5 e5 (t_prod t1 t2) ->
-     K_term G5 (u_prr e5) t2
  | K_term_prim : forall (G5:G) (e1:e) (p5:p) (e2:e),
      K_ant G5 e1 t_int ->
      K_ant G5 e2 t_int ->
@@ -240,3 +198,9 @@ with K_term : G -> u -> t -> Prop :=    (* defn term *)
  | K_term_halt : forall (G5:G) (e5:e) (t5:t),
      K_ant G5 e5 t5 ->
      K_term G5 (u_halt e5) t_void.
+
+
+(** infrastructure *)
+Hint Constructors ant term ant term lc_u lc_e.
+
+

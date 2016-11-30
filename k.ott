@@ -19,9 +19,6 @@ u :: 'u_' ::= {{ com raw terms }}
 | i             ::   :: int
 | \ ( x : t ) . e :: :: lam (+ bind x in e +)
 | e1 e2         ::   :: app
-| e1 * e2       ::   :: pair
-| e prl         ::   :: prl
-| e prr         ::   :: prr
 | e1 p e2       ::   :: prim
 | if0 ( e1 , e2 , e3 ) :: :: if0
 | let x = e in u ::  :: let (+ bind x in u +)
@@ -99,19 +96,6 @@ G |-F e2 : t1
 ----------------------- :: app
 G |-F e1 e2 : t2
 
-G |-F e1 : t1
-G |-F e2 : t2
---------------------------- :: pair
-G |-F e1 * e2 : t1 * t2
-
-G |-F e : t1 * t2
---------------------- :: prl
-G |-F e prl : t1
-
-G |-F e : t1 * t2
---------------------- :: prr
-G |-F e prr : t2
-
 G |-F e1 : int
 G |-F e2 : int
 ----------------------- :: prim
@@ -148,23 +132,10 @@ G , x : t |-K e : void
 ------------------------------------- :: Lam
 G |-K \ ( x : t ) . e : t -> void
 
-G |-K e1 : t1
-G |-K e2 : t2
---------------------------- :: pair
-G |-K e1 * e2 : t1 * t2
-
 G |-K e : t
 G , x : t |-K u : void
 ------------------------ :: let
 G |-K let x = e in u : void
-
-G |-K e : t1 * t2
----------------------------- :: prl
-G |-K e prl : t1
-
-G |-K e : t1 * t2
----------------------------- :: prr
-G |-K e prr : t2
 
 G |-K e1 : int
 G |-K e2 : int

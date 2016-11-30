@@ -43,17 +43,17 @@ Scheme e_ind' := Induction for e Sort Prop
   with u_ind' := Induction for u Sort Prop.
 
 Definition e_u_mutind :=
-  fun H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12 H13 H14 H15 =>
-  (conj (e_ind' H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12 H13 H14 H15)
-  (u_ind' H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12 H13 H14 H15)).
+  fun H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12 =>
+  (conj (e_ind' H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12)
+  (u_ind' H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12)).
 
 Scheme e_rec' := Induction for e Sort Set
   with u_rec' := Induction for u Sort Set.
 
 Definition e_u_mutrec :=
-  fun H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12 H13 H14 H15 =>
-  (pair (e_rec' H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12 H13 H14 H15)
-  (u_rec' H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12 H13 H14 H15)).
+  fun H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12 =>
+  (pair (e_rec' H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12)
+  (u_rec' H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12)).
 
 
 (* *********************************************************************** *)
@@ -71,9 +71,6 @@ with close_u_wrt_u_rec (n1 : nat) (x1 : x) (u1 : u) {struct u1} : u :=
     | u_int i1 => u_int i1
     | u_lam t1 e1 => u_lam t1 (close_e_wrt_u_rec (S n1) x1 e1)
     | u_app e1 e2 => u_app (close_e_wrt_u_rec n1 x1 e1) (close_e_wrt_u_rec n1 x1 e2)
-    | u_pair e1 e2 => u_pair (close_e_wrt_u_rec n1 x1 e1) (close_e_wrt_u_rec n1 x1 e2)
-    | u_prl e1 => u_prl (close_e_wrt_u_rec n1 x1 e1)
-    | u_prr e1 => u_prr (close_e_wrt_u_rec n1 x1 e1)
     | u_prim e1 p1 e2 => u_prim (close_e_wrt_u_rec n1 x1 e1) p1 (close_e_wrt_u_rec n1 x1 e2)
     | u_if0 e1 e2 e3 => u_if0 (close_e_wrt_u_rec n1 x1 e1) (close_e_wrt_u_rec n1 x1 e2) (close_e_wrt_u_rec n1 x1 e3)
     | u_let e1 u2 => u_let (close_e_wrt_u_rec n1 x1 e1) (close_u_wrt_u_rec (S n1) x1 u2)
@@ -114,9 +111,6 @@ with size_u (u1 : u) {struct u1} : nat :=
     | u_int i1 => 1
     | u_lam t1 e1 => 1 + (size_t t1) + (size_e e1)
     | u_app e1 e2 => 1 + (size_e e1) + (size_e e2)
-    | u_pair e1 e2 => 1 + (size_e e1) + (size_e e2)
-    | u_prl e1 => 1 + (size_e e1)
-    | u_prr e1 => 1 + (size_e e1)
     | u_prim e1 p1 e2 => 1 + (size_e e1) + (size_p p1) + (size_e e2)
     | u_if0 e1 e2 e3 => 1 + (size_e e1) + (size_e e2) + (size_e e3)
     | u_let e1 u2 => 1 + (size_e e1) + (size_u u2)
@@ -149,16 +143,6 @@ with degree_u_wrt_u : nat -> u -> Prop :=
     degree_e_wrt_u n1 e1 ->
     degree_e_wrt_u n1 e2 ->
     degree_u_wrt_u n1 (u_app e1 e2)
-  | degree_wrt_u_u_pair : forall n1 e1 e2,
-    degree_e_wrt_u n1 e1 ->
-    degree_e_wrt_u n1 e2 ->
-    degree_u_wrt_u n1 (u_pair e1 e2)
-  | degree_wrt_u_u_prl : forall n1 e1,
-    degree_e_wrt_u n1 e1 ->
-    degree_u_wrt_u n1 (u_prl e1)
-  | degree_wrt_u_u_prr : forall n1 e1,
-    degree_e_wrt_u n1 e1 ->
-    degree_u_wrt_u n1 (u_prr e1)
   | degree_wrt_u_u_prim : forall n1 e1 p1 e2,
     degree_e_wrt_u n1 e1 ->
     degree_e_wrt_u n1 e2 ->
@@ -180,9 +164,9 @@ Scheme degree_e_wrt_u_ind' := Induction for degree_e_wrt_u Sort Prop
   with degree_u_wrt_u_ind' := Induction for degree_u_wrt_u Sort Prop.
 
 Definition degree_e_wrt_u_degree_u_wrt_u_mutind :=
-  fun H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12 H13 H14 H15 =>
-  (conj (degree_e_wrt_u_ind' H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12 H13 H14 H15)
-  (degree_u_wrt_u_ind' H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12 H13 H14 H15)).
+  fun H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12 =>
+  (conj (degree_e_wrt_u_ind' H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12)
+  (degree_u_wrt_u_ind' H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12)).
 
 Hint Constructors degree_e_wrt_u : core lngen.
 
@@ -209,16 +193,6 @@ with lc_set_u : u -> Set :=
     lc_set_e e1 ->
     lc_set_e e2 ->
     lc_set_u (u_app e1 e2)
-  | lc_set_u_pair : forall e1 e2,
-    lc_set_e e1 ->
-    lc_set_e e2 ->
-    lc_set_u (u_pair e1 e2)
-  | lc_set_u_prl : forall e1,
-    lc_set_e e1 ->
-    lc_set_u (u_prl e1)
-  | lc_set_u_prr : forall e1,
-    lc_set_e e1 ->
-    lc_set_u (u_prr e1)
   | lc_set_u_prim : forall e1 p1 e2,
     lc_set_e e1 ->
     lc_set_e e2 ->
@@ -240,25 +214,25 @@ Scheme lc_e_ind' := Induction for lc_e Sort Prop
   with lc_u_ind' := Induction for lc_u Sort Prop.
 
 Definition lc_e_lc_u_mutind :=
-  fun H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12 H13 H14 =>
-  (conj (lc_e_ind' H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12 H13 H14)
-  (lc_u_ind' H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12 H13 H14)).
+  fun H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 =>
+  (conj (lc_e_ind' H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11)
+  (lc_u_ind' H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11)).
 
 Scheme lc_set_e_ind' := Induction for lc_set_e Sort Prop
   with lc_set_u_ind' := Induction for lc_set_u Sort Prop.
 
 Definition lc_set_e_lc_set_u_mutind :=
-  fun H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12 H13 H14 =>
-  (conj (lc_set_e_ind' H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12 H13 H14)
-  (lc_set_u_ind' H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12 H13 H14)).
+  fun H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 =>
+  (conj (lc_set_e_ind' H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11)
+  (lc_set_u_ind' H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11)).
 
 Scheme lc_set_e_rec' := Induction for lc_set_e Sort Set
   with lc_set_u_rec' := Induction for lc_set_u Sort Set.
 
 Definition lc_set_e_lc_set_u_mutrec :=
-  fun H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12 H13 H14 =>
-  (pair (lc_set_e_rec' H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12 H13 H14)
-  (lc_set_u_rec' H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12 H13 H14)).
+  fun H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 =>
+  (pair (lc_set_e_rec' H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11)
+  (lc_set_u_rec' H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11)).
 
 Hint Constructors lc_e : core lngen.
 
