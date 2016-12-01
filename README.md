@@ -13,7 +13,7 @@ You can see the definitions in [k.pdf](k.pdf).
 ## Continuations
 Programs in System K are terms of type `void`.  
 Continuations are lambda expressions that
-takes a raw term and returns a program i.e.
+takes a term and returns a program i.e.
 
     Gamma |- u : t
     --------------------
@@ -33,6 +33,8 @@ in which `Kcont[[t]] = K[[t]] -> void`
 ### Program conversion
 `Kprog[[u^t]] = Kexp[[u^t]](\x:K[[t]]. halt x^K[[t]])^Kcont[[t]]`  
 in which `Kexp` conversion is defined as follows:
+
+`Kexp[[e]] : Kcont[[t]] -> void` in which `e` has type `t`
 
 | e | Kexp[[e]] k |
 |:---:|:-----------:|
