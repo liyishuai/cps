@@ -18,14 +18,14 @@ Require Export k_ott.
 Scheme t_ind' := Induction for t Sort Prop.
 
 Definition t_mutind :=
-  fun H1 H2 H3 H4 H5 =>
-  t_ind' H1 H2 H3 H4 H5.
+  fun H1 H2 H3 H4 =>
+  t_ind' H1 H2 H3 H4.
 
 Scheme t_rec' := Induction for t Sort Set.
 
 Definition t_mutrec :=
-  fun H1 H2 H3 H4 H5 =>
-  t_rec' H1 H2 H3 H4 H5.
+  fun H1 H2 H3 H4 =>
+  t_rec' H1 H2 H3 H4.
 
 Scheme p_ind' := Induction for p Sort Prop.
 
@@ -90,7 +90,6 @@ Fixpoint size_t (t1 : t) {struct t1} : nat :=
     | t_int => 1
     | t_void => 1
     | t_arr t2 t3 => 1 + (size_t t2) + (size_t t3)
-    | t_prod t2 t3 => 1 + (size_t t2) + (size_t t3)
   end.
 
 Fixpoint size_p (p1 : p) {struct p1} : nat :=

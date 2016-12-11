@@ -7,12 +7,10 @@ t {{ tex \tau }}, s {{ tex \sigma }} :: 't_' ::= {{ com types }}
 | int               ::   :: int
 | void              ::   :: void
 | t1 -> t2          ::   :: arr
-| t1 * t2           ::   :: prod
 | ( t )             :: S :: par {{ coq ([[t]]) }}
 
 e :: 'e_' ::= {{ com annotated terms }}
 | u t :: :: ann {{ tex [[u]]^[[t]] }}
-| e [ u / x ] :: M :: sub {{ coq (open_e_wrt_u [[x e]] [[u]]) }}
 
 u :: 'u_' ::= {{ com raw terms }}
 | x             ::   :: var
@@ -31,11 +29,9 @@ p :: 'p_' ::= {{ com primitives }}
 | - :: :: minus
 
 substitutions
-  single e x :: e_subst
   single u x :: u_subst
 
 freevars
-  e x :: e_fv
   u x :: u_fv
 
 grammar
@@ -46,13 +42,8 @@ G {{ tex \Gamma }} :: 'g_' ::= {{ com contexts }} {{ coq list (x * t) }}
 terminals :: terminals_ ::=
 | int :: :: int {{ tex \mathbb Z }}
 | -> :: :: to {{ tex \to }}
-| all :: :: forall {{ tex \forall }}
 | void :: :: void {{ tex \mathtt{void} }}
-| * :: :: prod {{ tex \times }}
 | \ :: :: lambda {{ tex \lambda }}
-| fix :: :: fix {{ tex \mathsf{fix} }}
-| prl :: :: prl {{ tex \cdot\mathtt l }}
-| prr :: :: prr {{ tex \cdot\mathtt r }}
 | let :: :: let {{ tex \mathsf{let} }}
 | in :: :: In {{ tex \mathsf{in} }}
 | if0 :: :: if0 {{ tex \mathsf{if0} }}

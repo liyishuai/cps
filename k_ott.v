@@ -7,8 +7,7 @@ Definition i := nat. (*r integer literals *)
 Inductive t : Set :=  (*r types *)
  | t_int : t
  | t_void : t
- | t_arr (t1:t) (t2:t)
- | t_prod (t1:t) (t2:t).
+ | t_arr (t1:t) (t2:t).
 
 Inductive p : Set :=  (*r primitives *)
  | p_plus : p
@@ -52,14 +51,14 @@ Fixpoint open_u_wrt_u_rec (k:nat) (u_6:u) (u__7:u) {struct u__7}: u :=
   | (u_let e5 u5) => u_let (open_e_wrt_u_rec k u_6 e5) (open_u_wrt_u_rec (S k) u_6 u5)
   | (u_halt e5) => u_halt (open_e_wrt_u_rec k u_6 e5)
 end
-with open_e_wrt_u_rec (k:nat) (u_6:u) (e_6:e) : e :=
-  match e_6 with
+with open_e_wrt_u_rec (k:nat) (u_6:u) (e5:e) : e :=
+  match e5 with
   | (e_ann u5 t5) => e_ann (open_u_wrt_u_rec k u_6 u5) t5
 end.
 
 Definition open_u_wrt_u u_6 u__7 := open_u_wrt_u_rec 0 u__7 u_6.
 
-Definition open_e_wrt_u u_6 e_6 := open_e_wrt_u_rec 0 e_6 u_6.
+Definition open_e_wrt_u u_6 e5 := open_e_wrt_u_rec 0 e5 u_6.
 
 (** terms are locally-closed pre-terms *)
 (** definitions *)
@@ -110,8 +109,8 @@ Fixpoint u_fv_u (u_6:u) : vars :=
   | (u_let e5 u5) => (u_fv_e e5) \u (u_fv_u u5)
   | (u_halt e5) => (u_fv_e e5)
 end
-with u_fv_e (e_6:e) : vars :=
-  match e_6 with
+with u_fv_e (e5:e) : vars :=
+  match e5 with
   | (e_ann u5 t5) => (u_fv_u u5)
 end.
 
@@ -128,9 +127,9 @@ Fixpoint u_subst_u (u_6:u) (x_6:x) (u__7:u) {struct u__7} : u :=
   | (u_let e5 u5) => u_let (u_subst_e u_6 x_6 e5) (u_subst_u u_6 x_6 u5)
   | (u_halt e5) => u_halt (u_subst_e u_6 x_6 e5)
 end
-with u_subst_e (u_6:u) (x_6:x) (e_6:e) {struct e_6} : e :=
-  match e_6 with
-  | (e_ann u5 t5) => e_ann (u_subst_u u_6 x_6 u5) t5
+with u_subst_e (u_6:u) (x5:x) (e5:e) {struct e5} : e :=
+  match e5 with
+  | (e_ann u5 t5) => e_ann (u_subst_u u_6 x5 u5) t5
 end.
 
 
@@ -198,9 +197,3 @@ with K_term : G -> u -> t -> Prop :=    (* defn term *)
  | K_term_halt : forall (G5:G) (e5:e) (t5:t),
      K_ant G5 e5 t5 ->
      K_term G5 (u_halt e5) t_void.
-
-
-(** infrastructure *)
-Hint Constructors ant term ant term lc_u lc_e.
-
-
