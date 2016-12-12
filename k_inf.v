@@ -809,10 +809,10 @@ Hint Immediate close_u_wrt_u_inj : lngen.
 
 Lemma close_e_wrt_u_rec_open_e_wrt_u_rec_close_u_wrt_u_rec_open_u_wrt_u_rec_mutual :
 (forall e1 x1 n1,
-  x1 `notin` u_fv_e e1 ->
+  x1 `notin` fv_e e1 ->
   close_e_wrt_u_rec n1 x1 (open_e_wrt_u_rec n1 (u_var_f x1) e1) = e1) /\
 (forall u1 x1 n1,
-  x1 `notin` u_fv_u u1 ->
+  x1 `notin` fv_u u1 ->
   close_u_wrt_u_rec n1 x1 (open_u_wrt_u_rec n1 (u_var_f x1) u1) = u1).
 Proof. Admitted.
 
@@ -822,7 +822,7 @@ Proof. Admitted.
 
 Lemma close_e_wrt_u_rec_open_e_wrt_u_rec :
 forall e1 x1 n1,
-  x1 `notin` u_fv_e e1 ->
+  x1 `notin` fv_e e1 ->
   close_e_wrt_u_rec n1 x1 (open_e_wrt_u_rec n1 (u_var_f x1) e1) = e1.
 Proof. Admitted.
 
@@ -835,7 +835,7 @@ Hint Rewrite close_e_wrt_u_rec_open_e_wrt_u_rec using solve [auto] : lngen.
 
 Lemma close_u_wrt_u_rec_open_u_wrt_u_rec :
 forall u1 x1 n1,
-  x1 `notin` u_fv_u u1 ->
+  x1 `notin` fv_u u1 ->
   close_u_wrt_u_rec n1 x1 (open_u_wrt_u_rec n1 (u_var_f x1) u1) = u1.
 Proof. Admitted.
 
@@ -846,7 +846,7 @@ Hint Rewrite close_u_wrt_u_rec_open_u_wrt_u_rec using solve [auto] : lngen.
 
 Lemma close_e_wrt_u_open_e_wrt_u :
 forall e1 x1,
-  x1 `notin` u_fv_e e1 ->
+  x1 `notin` fv_e e1 ->
   close_e_wrt_u x1 (open_e_wrt_u e1 (u_var_f x1)) = e1.
 Proof. Admitted.
 
@@ -855,7 +855,7 @@ Hint Rewrite close_e_wrt_u_open_e_wrt_u using solve [auto] : lngen.
 
 Lemma close_u_wrt_u_open_u_wrt_u :
 forall u1 x1,
-  x1 `notin` u_fv_u u1 ->
+  x1 `notin` fv_u u1 ->
   close_u_wrt_u x1 (open_u_wrt_u u1 (u_var_f x1)) = u1.
 Proof. Admitted.
 
@@ -917,13 +917,13 @@ Hint Rewrite open_u_wrt_u_close_u_wrt_u using solve [auto] : lngen.
 
 Lemma open_e_wrt_u_rec_inj_open_u_wrt_u_rec_inj_mutual :
 (forall e2 e1 x1 n1,
-  x1 `notin` u_fv_e e2 ->
-  x1 `notin` u_fv_e e1 ->
+  x1 `notin` fv_e e2 ->
+  x1 `notin` fv_e e1 ->
   open_e_wrt_u_rec n1 (u_var_f x1) e2 = open_e_wrt_u_rec n1 (u_var_f x1) e1 ->
   e2 = e1) /\
 (forall u2 u1 x1 n1,
-  x1 `notin` u_fv_u u2 ->
-  x1 `notin` u_fv_u u1 ->
+  x1 `notin` fv_u u2 ->
+  x1 `notin` fv_u u1 ->
   open_u_wrt_u_rec n1 (u_var_f x1) u2 = open_u_wrt_u_rec n1 (u_var_f x1) u1 ->
   u2 = u1).
 Proof. Admitted.
@@ -934,8 +934,8 @@ Proof. Admitted.
 
 Lemma open_e_wrt_u_rec_inj :
 forall e2 e1 x1 n1,
-  x1 `notin` u_fv_e e2 ->
-  x1 `notin` u_fv_e e1 ->
+  x1 `notin` fv_e e2 ->
+  x1 `notin` fv_e e1 ->
   open_e_wrt_u_rec n1 (u_var_f x1) e2 = open_e_wrt_u_rec n1 (u_var_f x1) e1 ->
   e2 = e1.
 Proof. Admitted.
@@ -948,8 +948,8 @@ Hint Immediate open_e_wrt_u_rec_inj : lngen.
 
 Lemma open_u_wrt_u_rec_inj :
 forall u2 u1 x1 n1,
-  x1 `notin` u_fv_u u2 ->
-  x1 `notin` u_fv_u u1 ->
+  x1 `notin` fv_u u2 ->
+  x1 `notin` fv_u u1 ->
   open_u_wrt_u_rec n1 (u_var_f x1) u2 = open_u_wrt_u_rec n1 (u_var_f x1) u1 ->
   u2 = u1.
 Proof. Admitted.
@@ -960,8 +960,8 @@ Hint Immediate open_u_wrt_u_rec_inj : lngen.
 
 Lemma open_e_wrt_u_inj :
 forall e2 e1 x1,
-  x1 `notin` u_fv_e e2 ->
-  x1 `notin` u_fv_e e1 ->
+  x1 `notin` fv_e e2 ->
+  x1 `notin` fv_e e1 ->
   open_e_wrt_u e2 (u_var_f x1) = open_e_wrt_u e1 (u_var_f x1) ->
   e2 = e1.
 Proof. Admitted.
@@ -970,8 +970,8 @@ Hint Immediate open_e_wrt_u_inj : lngen.
 
 Lemma open_u_wrt_u_inj :
 forall u2 u1 x1,
-  x1 `notin` u_fv_u u2 ->
-  x1 `notin` u_fv_u u1 ->
+  x1 `notin` fv_u u2 ->
+  x1 `notin` fv_u u1 ->
   open_u_wrt_u u2 (u_var_f x1) = open_u_wrt_u u1 (u_var_f x1) ->
   u2 = u1.
 Proof. Admitted.
@@ -1209,11 +1209,11 @@ Ltac default_autorewrite ::= fail.
 Lemma close_e_wrt_u_rec_degree_e_wrt_u_close_u_wrt_u_rec_degree_u_wrt_u_mutual :
 (forall e1 x1 n1,
   degree_e_wrt_u n1 e1 ->
-  x1 `notin` u_fv_e e1 ->
+  x1 `notin` fv_e e1 ->
   close_e_wrt_u_rec n1 x1 e1 = e1) /\
 (forall u1 x1 n1,
   degree_u_wrt_u n1 u1 ->
-  x1 `notin` u_fv_u u1 ->
+  x1 `notin` fv_u u1 ->
   close_u_wrt_u_rec n1 x1 u1 = u1).
 Proof. Admitted.
 
@@ -1224,7 +1224,7 @@ Proof. Admitted.
 Lemma close_e_wrt_u_rec_degree_e_wrt_u :
 forall e1 x1 n1,
   degree_e_wrt_u n1 e1 ->
-  x1 `notin` u_fv_e e1 ->
+  x1 `notin` fv_e e1 ->
   close_e_wrt_u_rec n1 x1 e1 = e1.
 Proof. Admitted.
 
@@ -1238,7 +1238,7 @@ Hint Rewrite close_e_wrt_u_rec_degree_e_wrt_u using solve [auto] : lngen.
 Lemma close_u_wrt_u_rec_degree_u_wrt_u :
 forall u1 x1 n1,
   degree_u_wrt_u n1 u1 ->
-  x1 `notin` u_fv_u u1 ->
+  x1 `notin` fv_u u1 ->
   close_u_wrt_u_rec n1 x1 u1 = u1.
 Proof. Admitted.
 
@@ -1250,7 +1250,7 @@ Hint Rewrite close_u_wrt_u_rec_degree_u_wrt_u using solve [auto] : lngen.
 Lemma close_e_wrt_u_lc_e :
 forall e1 x1,
   lc_e e1 ->
-  x1 `notin` u_fv_e e1 ->
+  x1 `notin` fv_e e1 ->
   close_e_wrt_u x1 e1 = e1.
 Proof. Admitted.
 
@@ -1260,7 +1260,7 @@ Hint Rewrite close_e_wrt_u_lc_e using solve [auto] : lngen.
 Lemma close_u_wrt_u_lc_u :
 forall u1 x1,
   lc_u u1 ->
-  x1 `notin` u_fv_u u1 ->
+  x1 `notin` fv_u u1 ->
   close_u_wrt_u x1 u1 = u1.
 Proof. Admitted.
 
@@ -1333,262 +1333,262 @@ Ltac default_autorewrite ::= autorewrite with lngen.
 
 (* begin hide *)
 
-Lemma u_fv_e_close_e_wrt_u_rec_u_fv_u_close_u_wrt_u_rec_mutual :
+Lemma fv_e_close_e_wrt_u_rec_fv_u_close_u_wrt_u_rec_mutual :
 (forall e1 x1 n1,
-  u_fv_e (close_e_wrt_u_rec n1 x1 e1) [=] remove x1 (u_fv_e e1)) /\
+  fv_e (close_e_wrt_u_rec n1 x1 e1) [=] remove x1 (fv_e e1)) /\
 (forall u1 x1 n1,
-  u_fv_u (close_u_wrt_u_rec n1 x1 u1) [=] remove x1 (u_fv_u u1)).
+  fv_u (close_u_wrt_u_rec n1 x1 u1) [=] remove x1 (fv_u u1)).
 Proof. Admitted.
 
 (* end hide *)
 
 (* begin hide *)
 
-Lemma u_fv_e_close_e_wrt_u_rec :
+Lemma fv_e_close_e_wrt_u_rec :
 forall e1 x1 n1,
-  u_fv_e (close_e_wrt_u_rec n1 x1 e1) [=] remove x1 (u_fv_e e1).
+  fv_e (close_e_wrt_u_rec n1 x1 e1) [=] remove x1 (fv_e e1).
 Proof. Admitted.
 
-Hint Resolve u_fv_e_close_e_wrt_u_rec : lngen.
-Hint Rewrite u_fv_e_close_e_wrt_u_rec using solve [auto] : lngen.
+Hint Resolve fv_e_close_e_wrt_u_rec : lngen.
+Hint Rewrite fv_e_close_e_wrt_u_rec using solve [auto] : lngen.
 
 (* end hide *)
 
 (* begin hide *)
 
-Lemma u_fv_u_close_u_wrt_u_rec :
+Lemma fv_u_close_u_wrt_u_rec :
 forall u1 x1 n1,
-  u_fv_u (close_u_wrt_u_rec n1 x1 u1) [=] remove x1 (u_fv_u u1).
+  fv_u (close_u_wrt_u_rec n1 x1 u1) [=] remove x1 (fv_u u1).
 Proof. Admitted.
 
-Hint Resolve u_fv_u_close_u_wrt_u_rec : lngen.
-Hint Rewrite u_fv_u_close_u_wrt_u_rec using solve [auto] : lngen.
+Hint Resolve fv_u_close_u_wrt_u_rec : lngen.
+Hint Rewrite fv_u_close_u_wrt_u_rec using solve [auto] : lngen.
 
 (* end hide *)
 
-Lemma u_fv_e_close_e_wrt_u :
+Lemma fv_e_close_e_wrt_u :
 forall e1 x1,
-  u_fv_e (close_e_wrt_u x1 e1) [=] remove x1 (u_fv_e e1).
+  fv_e (close_e_wrt_u x1 e1) [=] remove x1 (fv_e e1).
 Proof. Admitted.
 
-Hint Resolve u_fv_e_close_e_wrt_u : lngen.
-Hint Rewrite u_fv_e_close_e_wrt_u using solve [auto] : lngen.
+Hint Resolve fv_e_close_e_wrt_u : lngen.
+Hint Rewrite fv_e_close_e_wrt_u using solve [auto] : lngen.
 
-Lemma u_fv_u_close_u_wrt_u :
+Lemma fv_u_close_u_wrt_u :
 forall u1 x1,
-  u_fv_u (close_u_wrt_u x1 u1) [=] remove x1 (u_fv_u u1).
+  fv_u (close_u_wrt_u x1 u1) [=] remove x1 (fv_u u1).
 Proof. Admitted.
 
-Hint Resolve u_fv_u_close_u_wrt_u : lngen.
-Hint Rewrite u_fv_u_close_u_wrt_u using solve [auto] : lngen.
+Hint Resolve fv_u_close_u_wrt_u : lngen.
+Hint Rewrite fv_u_close_u_wrt_u using solve [auto] : lngen.
 
 (* begin hide *)
 
-Lemma u_fv_e_open_e_wrt_u_rec_lower_u_fv_u_open_u_wrt_u_rec_lower_mutual :
+Lemma fv_e_open_e_wrt_u_rec_lower_fv_u_open_u_wrt_u_rec_lower_mutual :
 (forall e1 u1 n1,
-  u_fv_e e1 [<=] u_fv_e (open_e_wrt_u_rec n1 u1 e1)) /\
+  fv_e e1 [<=] fv_e (open_e_wrt_u_rec n1 u1 e1)) /\
 (forall u1 u2 n1,
-  u_fv_u u1 [<=] u_fv_u (open_u_wrt_u_rec n1 u2 u1)).
+  fv_u u1 [<=] fv_u (open_u_wrt_u_rec n1 u2 u1)).
 Proof. Admitted.
 
 (* end hide *)
 
 (* begin hide *)
 
-Lemma u_fv_e_open_e_wrt_u_rec_lower :
+Lemma fv_e_open_e_wrt_u_rec_lower :
 forall e1 u1 n1,
-  u_fv_e e1 [<=] u_fv_e (open_e_wrt_u_rec n1 u1 e1).
+  fv_e e1 [<=] fv_e (open_e_wrt_u_rec n1 u1 e1).
 Proof. Admitted.
 
-Hint Resolve u_fv_e_open_e_wrt_u_rec_lower : lngen.
+Hint Resolve fv_e_open_e_wrt_u_rec_lower : lngen.
 
 (* end hide *)
 
 (* begin hide *)
 
-Lemma u_fv_u_open_u_wrt_u_rec_lower :
+Lemma fv_u_open_u_wrt_u_rec_lower :
 forall u1 u2 n1,
-  u_fv_u u1 [<=] u_fv_u (open_u_wrt_u_rec n1 u2 u1).
+  fv_u u1 [<=] fv_u (open_u_wrt_u_rec n1 u2 u1).
 Proof. Admitted.
 
-Hint Resolve u_fv_u_open_u_wrt_u_rec_lower : lngen.
+Hint Resolve fv_u_open_u_wrt_u_rec_lower : lngen.
 
 (* end hide *)
 
-Lemma u_fv_e_open_e_wrt_u_lower :
+Lemma fv_e_open_e_wrt_u_lower :
 forall e1 u1,
-  u_fv_e e1 [<=] u_fv_e (open_e_wrt_u e1 u1).
+  fv_e e1 [<=] fv_e (open_e_wrt_u e1 u1).
 Proof. Admitted.
 
-Hint Resolve u_fv_e_open_e_wrt_u_lower : lngen.
+Hint Resolve fv_e_open_e_wrt_u_lower : lngen.
 
-Lemma u_fv_u_open_u_wrt_u_lower :
+Lemma fv_u_open_u_wrt_u_lower :
 forall u1 u2,
-  u_fv_u u1 [<=] u_fv_u (open_u_wrt_u u1 u2).
+  fv_u u1 [<=] fv_u (open_u_wrt_u u1 u2).
 Proof. Admitted.
 
-Hint Resolve u_fv_u_open_u_wrt_u_lower : lngen.
+Hint Resolve fv_u_open_u_wrt_u_lower : lngen.
 
 (* begin hide *)
 
-Lemma u_fv_e_open_e_wrt_u_rec_upper_u_fv_u_open_u_wrt_u_rec_upper_mutual :
+Lemma fv_e_open_e_wrt_u_rec_upper_fv_u_open_u_wrt_u_rec_upper_mutual :
 (forall e1 u1 n1,
-  u_fv_e (open_e_wrt_u_rec n1 u1 e1) [<=] u_fv_u u1 `union` u_fv_e e1) /\
+  fv_e (open_e_wrt_u_rec n1 u1 e1) [<=] fv_u u1 `union` fv_e e1) /\
 (forall u1 u2 n1,
-  u_fv_u (open_u_wrt_u_rec n1 u2 u1) [<=] u_fv_u u2 `union` u_fv_u u1).
+  fv_u (open_u_wrt_u_rec n1 u2 u1) [<=] fv_u u2 `union` fv_u u1).
 Proof. Admitted.
 
 (* end hide *)
 
 (* begin hide *)
 
-Lemma u_fv_e_open_e_wrt_u_rec_upper :
+Lemma fv_e_open_e_wrt_u_rec_upper :
 forall e1 u1 n1,
-  u_fv_e (open_e_wrt_u_rec n1 u1 e1) [<=] u_fv_u u1 `union` u_fv_e e1.
+  fv_e (open_e_wrt_u_rec n1 u1 e1) [<=] fv_u u1 `union` fv_e e1.
 Proof. Admitted.
 
-Hint Resolve u_fv_e_open_e_wrt_u_rec_upper : lngen.
+Hint Resolve fv_e_open_e_wrt_u_rec_upper : lngen.
 
 (* end hide *)
 
 (* begin hide *)
 
-Lemma u_fv_u_open_u_wrt_u_rec_upper :
+Lemma fv_u_open_u_wrt_u_rec_upper :
 forall u1 u2 n1,
-  u_fv_u (open_u_wrt_u_rec n1 u2 u1) [<=] u_fv_u u2 `union` u_fv_u u1.
+  fv_u (open_u_wrt_u_rec n1 u2 u1) [<=] fv_u u2 `union` fv_u u1.
 Proof. Admitted.
 
-Hint Resolve u_fv_u_open_u_wrt_u_rec_upper : lngen.
+Hint Resolve fv_u_open_u_wrt_u_rec_upper : lngen.
 
 (* end hide *)
 
-Lemma u_fv_e_open_e_wrt_u_upper :
+Lemma fv_e_open_e_wrt_u_upper :
 forall e1 u1,
-  u_fv_e (open_e_wrt_u e1 u1) [<=] u_fv_u u1 `union` u_fv_e e1.
+  fv_e (open_e_wrt_u e1 u1) [<=] fv_u u1 `union` fv_e e1.
 Proof. Admitted.
 
-Hint Resolve u_fv_e_open_e_wrt_u_upper : lngen.
+Hint Resolve fv_e_open_e_wrt_u_upper : lngen.
 
-Lemma u_fv_u_open_u_wrt_u_upper :
+Lemma fv_u_open_u_wrt_u_upper :
 forall u1 u2,
-  u_fv_u (open_u_wrt_u u1 u2) [<=] u_fv_u u2 `union` u_fv_u u1.
+  fv_u (open_u_wrt_u u1 u2) [<=] fv_u u2 `union` fv_u u1.
 Proof. Admitted.
 
-Hint Resolve u_fv_u_open_u_wrt_u_upper : lngen.
+Hint Resolve fv_u_open_u_wrt_u_upper : lngen.
 
 (* begin hide *)
 
-Lemma u_fv_e_u_subst_e_fresh_u_fv_u_u_subst_u_fresh_mutual :
+Lemma fv_e_subst_e_fresh_fv_u_subst_u_fresh_mutual :
 (forall e1 u1 x1,
-  x1 `notin` u_fv_e e1 ->
-  u_fv_e (u_subst_e u1 x1 e1) [=] u_fv_e e1) /\
+  x1 `notin` fv_e e1 ->
+  fv_e (subst_e u1 x1 e1) [=] fv_e e1) /\
 (forall u1 u2 x1,
-  x1 `notin` u_fv_u u1 ->
-  u_fv_u (u_subst_u u2 x1 u1) [=] u_fv_u u1).
+  x1 `notin` fv_u u1 ->
+  fv_u (subst_u u2 x1 u1) [=] fv_u u1).
 Proof. Admitted.
 
 (* end hide *)
 
-Lemma u_fv_e_u_subst_e_fresh :
+Lemma fv_e_subst_e_fresh :
 forall e1 u1 x1,
-  x1 `notin` u_fv_e e1 ->
-  u_fv_e (u_subst_e u1 x1 e1) [=] u_fv_e e1.
+  x1 `notin` fv_e e1 ->
+  fv_e (subst_e u1 x1 e1) [=] fv_e e1.
 Proof. Admitted.
 
-Hint Resolve u_fv_e_u_subst_e_fresh : lngen.
-Hint Rewrite u_fv_e_u_subst_e_fresh using solve [auto] : lngen.
+Hint Resolve fv_e_subst_e_fresh : lngen.
+Hint Rewrite fv_e_subst_e_fresh using solve [auto] : lngen.
 
-Lemma u_fv_u_u_subst_u_fresh :
+Lemma fv_u_subst_u_fresh :
 forall u1 u2 x1,
-  x1 `notin` u_fv_u u1 ->
-  u_fv_u (u_subst_u u2 x1 u1) [=] u_fv_u u1.
+  x1 `notin` fv_u u1 ->
+  fv_u (subst_u u2 x1 u1) [=] fv_u u1.
 Proof. Admitted.
 
-Hint Resolve u_fv_u_u_subst_u_fresh : lngen.
-Hint Rewrite u_fv_u_u_subst_u_fresh using solve [auto] : lngen.
+Hint Resolve fv_u_subst_u_fresh : lngen.
+Hint Rewrite fv_u_subst_u_fresh using solve [auto] : lngen.
 
 (* begin hide *)
 
-Lemma u_fv_e_u_subst_e_lower_u_fv_u_u_subst_u_lower_mutual :
+Lemma fv_e_subst_e_lower_fv_u_subst_u_lower_mutual :
 (forall e1 u1 x1,
-  remove x1 (u_fv_e e1) [<=] u_fv_e (u_subst_e u1 x1 e1)) /\
+  remove x1 (fv_e e1) [<=] fv_e (subst_e u1 x1 e1)) /\
 (forall u1 u2 x1,
-  remove x1 (u_fv_u u1) [<=] u_fv_u (u_subst_u u2 x1 u1)).
+  remove x1 (fv_u u1) [<=] fv_u (subst_u u2 x1 u1)).
 Proof. Admitted.
 
 (* end hide *)
 
-Lemma u_fv_e_u_subst_e_lower :
+Lemma fv_e_subst_e_lower :
 forall e1 u1 x1,
-  remove x1 (u_fv_e e1) [<=] u_fv_e (u_subst_e u1 x1 e1).
+  remove x1 (fv_e e1) [<=] fv_e (subst_e u1 x1 e1).
 Proof. Admitted.
 
-Hint Resolve u_fv_e_u_subst_e_lower : lngen.
+Hint Resolve fv_e_subst_e_lower : lngen.
 
-Lemma u_fv_u_u_subst_u_lower :
+Lemma fv_u_subst_u_lower :
 forall u1 u2 x1,
-  remove x1 (u_fv_u u1) [<=] u_fv_u (u_subst_u u2 x1 u1).
+  remove x1 (fv_u u1) [<=] fv_u (subst_u u2 x1 u1).
 Proof. Admitted.
 
-Hint Resolve u_fv_u_u_subst_u_lower : lngen.
+Hint Resolve fv_u_subst_u_lower : lngen.
 
 (* begin hide *)
 
-Lemma u_fv_e_u_subst_e_notin_u_fv_u_u_subst_u_notin_mutual :
+Lemma fv_e_subst_e_notin_fv_u_subst_u_notin_mutual :
 (forall e1 u1 x1 x2,
-  x2 `notin` u_fv_e e1 ->
-  x2 `notin` u_fv_u u1 ->
-  x2 `notin` u_fv_e (u_subst_e u1 x1 e1)) /\
+  x2 `notin` fv_e e1 ->
+  x2 `notin` fv_u u1 ->
+  x2 `notin` fv_e (subst_e u1 x1 e1)) /\
 (forall u1 u2 x1 x2,
-  x2 `notin` u_fv_u u1 ->
-  x2 `notin` u_fv_u u2 ->
-  x2 `notin` u_fv_u (u_subst_u u2 x1 u1)).
+  x2 `notin` fv_u u1 ->
+  x2 `notin` fv_u u2 ->
+  x2 `notin` fv_u (subst_u u2 x1 u1)).
 Proof. Admitted.
 
 (* end hide *)
 
-Lemma u_fv_e_u_subst_e_notin :
+Lemma fv_e_subst_e_notin :
 forall e1 u1 x1 x2,
-  x2 `notin` u_fv_e e1 ->
-  x2 `notin` u_fv_u u1 ->
-  x2 `notin` u_fv_e (u_subst_e u1 x1 e1).
+  x2 `notin` fv_e e1 ->
+  x2 `notin` fv_u u1 ->
+  x2 `notin` fv_e (subst_e u1 x1 e1).
 Proof. Admitted.
 
-Hint Resolve u_fv_e_u_subst_e_notin : lngen.
+Hint Resolve fv_e_subst_e_notin : lngen.
 
-Lemma u_fv_u_u_subst_u_notin :
+Lemma fv_u_subst_u_notin :
 forall u1 u2 x1 x2,
-  x2 `notin` u_fv_u u1 ->
-  x2 `notin` u_fv_u u2 ->
-  x2 `notin` u_fv_u (u_subst_u u2 x1 u1).
+  x2 `notin` fv_u u1 ->
+  x2 `notin` fv_u u2 ->
+  x2 `notin` fv_u (subst_u u2 x1 u1).
 Proof. Admitted.
 
-Hint Resolve u_fv_u_u_subst_u_notin : lngen.
+Hint Resolve fv_u_subst_u_notin : lngen.
 
 (* begin hide *)
 
-Lemma u_fv_e_u_subst_e_upper_u_fv_u_u_subst_u_upper_mutual :
+Lemma fv_e_subst_e_upper_fv_u_subst_u_upper_mutual :
 (forall e1 u1 x1,
-  u_fv_e (u_subst_e u1 x1 e1) [<=] u_fv_u u1 `union` remove x1 (u_fv_e e1)) /\
+  fv_e (subst_e u1 x1 e1) [<=] fv_u u1 `union` remove x1 (fv_e e1)) /\
 (forall u1 u2 x1,
-  u_fv_u (u_subst_u u2 x1 u1) [<=] u_fv_u u2 `union` remove x1 (u_fv_u u1)).
+  fv_u (subst_u u2 x1 u1) [<=] fv_u u2 `union` remove x1 (fv_u u1)).
 Proof. Admitted.
 
 (* end hide *)
 
-Lemma u_fv_e_u_subst_e_upper :
+Lemma fv_e_subst_e_upper :
 forall e1 u1 x1,
-  u_fv_e (u_subst_e u1 x1 e1) [<=] u_fv_u u1 `union` remove x1 (u_fv_e e1).
+  fv_e (subst_e u1 x1 e1) [<=] fv_u u1 `union` remove x1 (fv_e e1).
 Proof. Admitted.
 
-Hint Resolve u_fv_e_u_subst_e_upper : lngen.
+Hint Resolve fv_e_subst_e_upper : lngen.
 
-Lemma u_fv_u_u_subst_u_upper :
+Lemma fv_u_subst_u_upper :
 forall u1 u2 x1,
-  u_fv_u (u_subst_u u2 x1 u1) [<=] u_fv_u u2 `union` remove x1 (u_fv_u u1).
+  fv_u (subst_u u2 x1 u1) [<=] fv_u u2 `union` remove x1 (fv_u u1).
 Proof. Admitted.
 
-Hint Resolve u_fv_u_u_subst_u_upper : lngen.
+Hint Resolve fv_u_subst_u_upper : lngen.
 
 
 (* *********************************************************************** *)
@@ -1599,489 +1599,489 @@ Ltac default_autorewrite ::= autorewrite with lngen.
 
 (* begin hide *)
 
-Lemma u_subst_e_close_e_wrt_u_rec_u_subst_u_close_u_wrt_u_rec_mutual :
+Lemma subst_e_close_e_wrt_u_rec_subst_u_close_u_wrt_u_rec_mutual :
 (forall e1 u1 x1 x2 n1,
   degree_u_wrt_u n1 u1 ->
   x1 <> x2 ->
-  x2 `notin` u_fv_u u1 ->
-  u_subst_e u1 x1 (close_e_wrt_u_rec n1 x2 e1) = close_e_wrt_u_rec n1 x2 (u_subst_e u1 x1 e1)) /\
+  x2 `notin` fv_u u1 ->
+  subst_e u1 x1 (close_e_wrt_u_rec n1 x2 e1) = close_e_wrt_u_rec n1 x2 (subst_e u1 x1 e1)) /\
 (forall u2 u1 x1 x2 n1,
   degree_u_wrt_u n1 u1 ->
   x1 <> x2 ->
-  x2 `notin` u_fv_u u1 ->
-  u_subst_u u1 x1 (close_u_wrt_u_rec n1 x2 u2) = close_u_wrt_u_rec n1 x2 (u_subst_u u1 x1 u2)).
+  x2 `notin` fv_u u1 ->
+  subst_u u1 x1 (close_u_wrt_u_rec n1 x2 u2) = close_u_wrt_u_rec n1 x2 (subst_u u1 x1 u2)).
 Proof. Admitted.
 
 (* end hide *)
 
-Lemma u_subst_e_close_e_wrt_u_rec :
+Lemma subst_e_close_e_wrt_u_rec :
 forall e1 u1 x1 x2 n1,
   degree_u_wrt_u n1 u1 ->
   x1 <> x2 ->
-  x2 `notin` u_fv_u u1 ->
-  u_subst_e u1 x1 (close_e_wrt_u_rec n1 x2 e1) = close_e_wrt_u_rec n1 x2 (u_subst_e u1 x1 e1).
+  x2 `notin` fv_u u1 ->
+  subst_e u1 x1 (close_e_wrt_u_rec n1 x2 e1) = close_e_wrt_u_rec n1 x2 (subst_e u1 x1 e1).
 Proof. Admitted.
 
-Hint Resolve u_subst_e_close_e_wrt_u_rec : lngen.
+Hint Resolve subst_e_close_e_wrt_u_rec : lngen.
 
-Lemma u_subst_u_close_u_wrt_u_rec :
+Lemma subst_u_close_u_wrt_u_rec :
 forall u2 u1 x1 x2 n1,
   degree_u_wrt_u n1 u1 ->
   x1 <> x2 ->
-  x2 `notin` u_fv_u u1 ->
-  u_subst_u u1 x1 (close_u_wrt_u_rec n1 x2 u2) = close_u_wrt_u_rec n1 x2 (u_subst_u u1 x1 u2).
+  x2 `notin` fv_u u1 ->
+  subst_u u1 x1 (close_u_wrt_u_rec n1 x2 u2) = close_u_wrt_u_rec n1 x2 (subst_u u1 x1 u2).
 Proof. Admitted.
 
-Hint Resolve u_subst_u_close_u_wrt_u_rec : lngen.
+Hint Resolve subst_u_close_u_wrt_u_rec : lngen.
 
-Lemma u_subst_e_close_e_wrt_u :
+Lemma subst_e_close_e_wrt_u :
 forall e1 u1 x1 x2,
   lc_u u1 ->  x1 <> x2 ->
-  x2 `notin` u_fv_u u1 ->
-  u_subst_e u1 x1 (close_e_wrt_u x2 e1) = close_e_wrt_u x2 (u_subst_e u1 x1 e1).
+  x2 `notin` fv_u u1 ->
+  subst_e u1 x1 (close_e_wrt_u x2 e1) = close_e_wrt_u x2 (subst_e u1 x1 e1).
 Proof. Admitted.
 
-Hint Resolve u_subst_e_close_e_wrt_u : lngen.
+Hint Resolve subst_e_close_e_wrt_u : lngen.
 
-Lemma u_subst_u_close_u_wrt_u :
+Lemma subst_u_close_u_wrt_u :
 forall u2 u1 x1 x2,
   lc_u u1 ->  x1 <> x2 ->
-  x2 `notin` u_fv_u u1 ->
-  u_subst_u u1 x1 (close_u_wrt_u x2 u2) = close_u_wrt_u x2 (u_subst_u u1 x1 u2).
+  x2 `notin` fv_u u1 ->
+  subst_u u1 x1 (close_u_wrt_u x2 u2) = close_u_wrt_u x2 (subst_u u1 x1 u2).
 Proof. Admitted.
 
-Hint Resolve u_subst_u_close_u_wrt_u : lngen.
+Hint Resolve subst_u_close_u_wrt_u : lngen.
 
 (* begin hide *)
 
-Lemma u_subst_e_degree_e_wrt_u_u_subst_u_degree_u_wrt_u_mutual :
+Lemma subst_e_degree_e_wrt_u_subst_u_degree_u_wrt_u_mutual :
 (forall e1 u1 x1 n1,
   degree_e_wrt_u n1 e1 ->
   degree_u_wrt_u n1 u1 ->
-  degree_e_wrt_u n1 (u_subst_e u1 x1 e1)) /\
+  degree_e_wrt_u n1 (subst_e u1 x1 e1)) /\
 (forall u1 u2 x1 n1,
   degree_u_wrt_u n1 u1 ->
   degree_u_wrt_u n1 u2 ->
-  degree_u_wrt_u n1 (u_subst_u u2 x1 u1)).
+  degree_u_wrt_u n1 (subst_u u2 x1 u1)).
 Proof. Admitted.
 
 (* end hide *)
 
-Lemma u_subst_e_degree_e_wrt_u :
+Lemma subst_e_degree_e_wrt_u :
 forall e1 u1 x1 n1,
   degree_e_wrt_u n1 e1 ->
   degree_u_wrt_u n1 u1 ->
-  degree_e_wrt_u n1 (u_subst_e u1 x1 e1).
+  degree_e_wrt_u n1 (subst_e u1 x1 e1).
 Proof. Admitted.
 
-Hint Resolve u_subst_e_degree_e_wrt_u : lngen.
+Hint Resolve subst_e_degree_e_wrt_u : lngen.
 
-Lemma u_subst_u_degree_u_wrt_u :
+Lemma subst_u_degree_u_wrt_u :
 forall u1 u2 x1 n1,
   degree_u_wrt_u n1 u1 ->
   degree_u_wrt_u n1 u2 ->
-  degree_u_wrt_u n1 (u_subst_u u2 x1 u1).
+  degree_u_wrt_u n1 (subst_u u2 x1 u1).
 Proof. Admitted.
 
-Hint Resolve u_subst_u_degree_u_wrt_u : lngen.
+Hint Resolve subst_u_degree_u_wrt_u : lngen.
 
 (* begin hide *)
 
-Lemma u_subst_e_fresh_eq_u_subst_u_fresh_eq_mutual :
+Lemma subst_e_fresh_eq_subst_u_fresh_eq_mutual :
 (forall e1 u1 x1,
-  x1 `notin` u_fv_e e1 ->
-  u_subst_e u1 x1 e1 = e1) /\
+  x1 `notin` fv_e e1 ->
+  subst_e u1 x1 e1 = e1) /\
 (forall u2 u1 x1,
-  x1 `notin` u_fv_u u2 ->
-  u_subst_u u1 x1 u2 = u2).
+  x1 `notin` fv_u u2 ->
+  subst_u u1 x1 u2 = u2).
 Proof. Admitted.
 
 (* end hide *)
 
-Lemma u_subst_e_fresh_eq :
+Lemma subst_e_fresh_eq :
 forall e1 u1 x1,
-  x1 `notin` u_fv_e e1 ->
-  u_subst_e u1 x1 e1 = e1.
+  x1 `notin` fv_e e1 ->
+  subst_e u1 x1 e1 = e1.
 Proof. Admitted.
 
-Hint Resolve u_subst_e_fresh_eq : lngen.
-Hint Rewrite u_subst_e_fresh_eq using solve [auto] : lngen.
+Hint Resolve subst_e_fresh_eq : lngen.
+Hint Rewrite subst_e_fresh_eq using solve [auto] : lngen.
 
-Lemma u_subst_u_fresh_eq :
+Lemma subst_u_fresh_eq :
 forall u2 u1 x1,
-  x1 `notin` u_fv_u u2 ->
-  u_subst_u u1 x1 u2 = u2.
+  x1 `notin` fv_u u2 ->
+  subst_u u1 x1 u2 = u2.
 Proof. Admitted.
 
-Hint Resolve u_subst_u_fresh_eq : lngen.
-Hint Rewrite u_subst_u_fresh_eq using solve [auto] : lngen.
+Hint Resolve subst_u_fresh_eq : lngen.
+Hint Rewrite subst_u_fresh_eq using solve [auto] : lngen.
 
 (* begin hide *)
 
-Lemma u_subst_e_fresh_same_u_subst_u_fresh_same_mutual :
+Lemma subst_e_fresh_same_subst_u_fresh_same_mutual :
 (forall e1 u1 x1,
-  x1 `notin` u_fv_u u1 ->
-  x1 `notin` u_fv_e (u_subst_e u1 x1 e1)) /\
+  x1 `notin` fv_u u1 ->
+  x1 `notin` fv_e (subst_e u1 x1 e1)) /\
 (forall u2 u1 x1,
-  x1 `notin` u_fv_u u1 ->
-  x1 `notin` u_fv_u (u_subst_u u1 x1 u2)).
+  x1 `notin` fv_u u1 ->
+  x1 `notin` fv_u (subst_u u1 x1 u2)).
 Proof. Admitted.
 
 (* end hide *)
 
-Lemma u_subst_e_fresh_same :
+Lemma subst_e_fresh_same :
 forall e1 u1 x1,
-  x1 `notin` u_fv_u u1 ->
-  x1 `notin` u_fv_e (u_subst_e u1 x1 e1).
+  x1 `notin` fv_u u1 ->
+  x1 `notin` fv_e (subst_e u1 x1 e1).
 Proof. Admitted.
 
-Hint Resolve u_subst_e_fresh_same : lngen.
+Hint Resolve subst_e_fresh_same : lngen.
 
-Lemma u_subst_u_fresh_same :
+Lemma subst_u_fresh_same :
 forall u2 u1 x1,
-  x1 `notin` u_fv_u u1 ->
-  x1 `notin` u_fv_u (u_subst_u u1 x1 u2).
+  x1 `notin` fv_u u1 ->
+  x1 `notin` fv_u (subst_u u1 x1 u2).
 Proof. Admitted.
 
-Hint Resolve u_subst_u_fresh_same : lngen.
+Hint Resolve subst_u_fresh_same : lngen.
 
 (* begin hide *)
 
-Lemma u_subst_e_fresh_u_subst_u_fresh_mutual :
+Lemma subst_e_fresh_subst_u_fresh_mutual :
 (forall e1 u1 x1 x2,
-  x1 `notin` u_fv_e e1 ->
-  x1 `notin` u_fv_u u1 ->
-  x1 `notin` u_fv_e (u_subst_e u1 x2 e1)) /\
+  x1 `notin` fv_e e1 ->
+  x1 `notin` fv_u u1 ->
+  x1 `notin` fv_e (subst_e u1 x2 e1)) /\
 (forall u2 u1 x1 x2,
-  x1 `notin` u_fv_u u2 ->
-  x1 `notin` u_fv_u u1 ->
-  x1 `notin` u_fv_u (u_subst_u u1 x2 u2)).
+  x1 `notin` fv_u u2 ->
+  x1 `notin` fv_u u1 ->
+  x1 `notin` fv_u (subst_u u1 x2 u2)).
 Proof. Admitted.
 
 (* end hide *)
 
-Lemma u_subst_e_fresh :
+Lemma subst_e_fresh :
 forall e1 u1 x1 x2,
-  x1 `notin` u_fv_e e1 ->
-  x1 `notin` u_fv_u u1 ->
-  x1 `notin` u_fv_e (u_subst_e u1 x2 e1).
+  x1 `notin` fv_e e1 ->
+  x1 `notin` fv_u u1 ->
+  x1 `notin` fv_e (subst_e u1 x2 e1).
 Proof. Admitted.
 
-Hint Resolve u_subst_e_fresh : lngen.
+Hint Resolve subst_e_fresh : lngen.
 
-Lemma u_subst_u_fresh :
+Lemma subst_u_fresh :
 forall u2 u1 x1 x2,
-  x1 `notin` u_fv_u u2 ->
-  x1 `notin` u_fv_u u1 ->
-  x1 `notin` u_fv_u (u_subst_u u1 x2 u2).
+  x1 `notin` fv_u u2 ->
+  x1 `notin` fv_u u1 ->
+  x1 `notin` fv_u (subst_u u1 x2 u2).
 Proof. Admitted.
 
-Hint Resolve u_subst_u_fresh : lngen.
+Hint Resolve subst_u_fresh : lngen.
 
-Lemma u_subst_e_lc_e :
+Lemma subst_e_lc_e :
 forall e1 u1 x1,
   lc_e e1 ->
   lc_u u1 ->
-  lc_e (u_subst_e u1 x1 e1).
+  lc_e (subst_e u1 x1 e1).
 Proof. Admitted.
 
-Hint Resolve u_subst_e_lc_e : lngen.
+Hint Resolve subst_e_lc_e : lngen.
 
-Lemma u_subst_u_lc_u :
+Lemma subst_u_lc_u :
 forall u1 u2 x1,
   lc_u u1 ->
   lc_u u2 ->
-  lc_u (u_subst_u u2 x1 u1).
+  lc_u (subst_u u2 x1 u1).
 Proof. Admitted.
 
-Hint Resolve u_subst_u_lc_u : lngen.
+Hint Resolve subst_u_lc_u : lngen.
 
 (* begin hide *)
 
-Lemma u_subst_e_open_e_wrt_u_rec_u_subst_u_open_u_wrt_u_rec_mutual :
+Lemma subst_e_open_e_wrt_u_rec_subst_u_open_u_wrt_u_rec_mutual :
 (forall e1 u1 u2 x1 n1,
   lc_u u1 ->
-  u_subst_e u1 x1 (open_e_wrt_u_rec n1 u2 e1) = open_e_wrt_u_rec n1 (u_subst_u u1 x1 u2) (u_subst_e u1 x1 e1)) /\
+  subst_e u1 x1 (open_e_wrt_u_rec n1 u2 e1) = open_e_wrt_u_rec n1 (subst_u u1 x1 u2) (subst_e u1 x1 e1)) /\
 (forall u3 u1 u2 x1 n1,
   lc_u u1 ->
-  u_subst_u u1 x1 (open_u_wrt_u_rec n1 u2 u3) = open_u_wrt_u_rec n1 (u_subst_u u1 x1 u2) (u_subst_u u1 x1 u3)).
+  subst_u u1 x1 (open_u_wrt_u_rec n1 u2 u3) = open_u_wrt_u_rec n1 (subst_u u1 x1 u2) (subst_u u1 x1 u3)).
 Proof. Admitted.
 
 (* end hide *)
 
 (* begin hide *)
 
-Lemma u_subst_e_open_e_wrt_u_rec :
+Lemma subst_e_open_e_wrt_u_rec :
 forall e1 u1 u2 x1 n1,
   lc_u u1 ->
-  u_subst_e u1 x1 (open_e_wrt_u_rec n1 u2 e1) = open_e_wrt_u_rec n1 (u_subst_u u1 x1 u2) (u_subst_e u1 x1 e1).
+  subst_e u1 x1 (open_e_wrt_u_rec n1 u2 e1) = open_e_wrt_u_rec n1 (subst_u u1 x1 u2) (subst_e u1 x1 e1).
 Proof. Admitted.
 
-Hint Resolve u_subst_e_open_e_wrt_u_rec : lngen.
+Hint Resolve subst_e_open_e_wrt_u_rec : lngen.
 
 (* end hide *)
 
 (* begin hide *)
 
-Lemma u_subst_u_open_u_wrt_u_rec :
+Lemma subst_u_open_u_wrt_u_rec :
 forall u3 u1 u2 x1 n1,
   lc_u u1 ->
-  u_subst_u u1 x1 (open_u_wrt_u_rec n1 u2 u3) = open_u_wrt_u_rec n1 (u_subst_u u1 x1 u2) (u_subst_u u1 x1 u3).
+  subst_u u1 x1 (open_u_wrt_u_rec n1 u2 u3) = open_u_wrt_u_rec n1 (subst_u u1 x1 u2) (subst_u u1 x1 u3).
 Proof. Admitted.
 
-Hint Resolve u_subst_u_open_u_wrt_u_rec : lngen.
+Hint Resolve subst_u_open_u_wrt_u_rec : lngen.
 
 (* end hide *)
 
-Lemma u_subst_e_open_e_wrt_u :
+Lemma subst_e_open_e_wrt_u :
 forall e1 u1 u2 x1,
   lc_u u1 ->
-  u_subst_e u1 x1 (open_e_wrt_u e1 u2) = open_e_wrt_u (u_subst_e u1 x1 e1) (u_subst_u u1 x1 u2).
+  subst_e u1 x1 (open_e_wrt_u e1 u2) = open_e_wrt_u (subst_e u1 x1 e1) (subst_u u1 x1 u2).
 Proof. Admitted.
 
-Hint Resolve u_subst_e_open_e_wrt_u : lngen.
+Hint Resolve subst_e_open_e_wrt_u : lngen.
 
-Lemma u_subst_u_open_u_wrt_u :
+Lemma subst_u_open_u_wrt_u :
 forall u3 u1 u2 x1,
   lc_u u1 ->
-  u_subst_u u1 x1 (open_u_wrt_u u3 u2) = open_u_wrt_u (u_subst_u u1 x1 u3) (u_subst_u u1 x1 u2).
+  subst_u u1 x1 (open_u_wrt_u u3 u2) = open_u_wrt_u (subst_u u1 x1 u3) (subst_u u1 x1 u2).
 Proof. Admitted.
 
-Hint Resolve u_subst_u_open_u_wrt_u : lngen.
+Hint Resolve subst_u_open_u_wrt_u : lngen.
 
-Lemma u_subst_e_open_e_wrt_u_var :
+Lemma subst_e_open_e_wrt_u_var :
 forall e1 u1 x1 x2,
   x1 <> x2 ->
   lc_u u1 ->
-  open_e_wrt_u (u_subst_e u1 x1 e1) (u_var_f x2) = u_subst_e u1 x1 (open_e_wrt_u e1 (u_var_f x2)).
+  open_e_wrt_u (subst_e u1 x1 e1) (u_var_f x2) = subst_e u1 x1 (open_e_wrt_u e1 (u_var_f x2)).
 Proof. Admitted.
 
-Hint Resolve u_subst_e_open_e_wrt_u_var : lngen.
+Hint Resolve subst_e_open_e_wrt_u_var : lngen.
 
-Lemma u_subst_u_open_u_wrt_u_var :
+Lemma subst_u_open_u_wrt_u_var :
 forall u2 u1 x1 x2,
   x1 <> x2 ->
   lc_u u1 ->
-  open_u_wrt_u (u_subst_u u1 x1 u2) (u_var_f x2) = u_subst_u u1 x1 (open_u_wrt_u u2 (u_var_f x2)).
+  open_u_wrt_u (subst_u u1 x1 u2) (u_var_f x2) = subst_u u1 x1 (open_u_wrt_u u2 (u_var_f x2)).
 Proof. Admitted.
 
-Hint Resolve u_subst_u_open_u_wrt_u_var : lngen.
+Hint Resolve subst_u_open_u_wrt_u_var : lngen.
 
 (* begin hide *)
 
-Lemma u_subst_e_spec_rec_u_subst_u_spec_rec_mutual :
+Lemma subst_e_spec_rec_subst_u_spec_rec_mutual :
 (forall e1 u1 x1 n1,
-  u_subst_e u1 x1 e1 = open_e_wrt_u_rec n1 u1 (close_e_wrt_u_rec n1 x1 e1)) /\
+  subst_e u1 x1 e1 = open_e_wrt_u_rec n1 u1 (close_e_wrt_u_rec n1 x1 e1)) /\
 (forall u1 u2 x1 n1,
-  u_subst_u u2 x1 u1 = open_u_wrt_u_rec n1 u2 (close_u_wrt_u_rec n1 x1 u1)).
+  subst_u u2 x1 u1 = open_u_wrt_u_rec n1 u2 (close_u_wrt_u_rec n1 x1 u1)).
 Proof. Admitted.
 
 (* end hide *)
 
 (* begin hide *)
 
-Lemma u_subst_e_spec_rec :
+Lemma subst_e_spec_rec :
 forall e1 u1 x1 n1,
-  u_subst_e u1 x1 e1 = open_e_wrt_u_rec n1 u1 (close_e_wrt_u_rec n1 x1 e1).
+  subst_e u1 x1 e1 = open_e_wrt_u_rec n1 u1 (close_e_wrt_u_rec n1 x1 e1).
 Proof. Admitted.
 
-Hint Resolve u_subst_e_spec_rec : lngen.
+Hint Resolve subst_e_spec_rec : lngen.
 
 (* end hide *)
 
 (* begin hide *)
 
-Lemma u_subst_u_spec_rec :
+Lemma subst_u_spec_rec :
 forall u1 u2 x1 n1,
-  u_subst_u u2 x1 u1 = open_u_wrt_u_rec n1 u2 (close_u_wrt_u_rec n1 x1 u1).
+  subst_u u2 x1 u1 = open_u_wrt_u_rec n1 u2 (close_u_wrt_u_rec n1 x1 u1).
 Proof. Admitted.
 
-Hint Resolve u_subst_u_spec_rec : lngen.
+Hint Resolve subst_u_spec_rec : lngen.
 
 (* end hide *)
 
-Lemma u_subst_e_spec :
+Lemma subst_e_spec :
 forall e1 u1 x1,
-  u_subst_e u1 x1 e1 = open_e_wrt_u (close_e_wrt_u x1 e1) u1.
+  subst_e u1 x1 e1 = open_e_wrt_u (close_e_wrt_u x1 e1) u1.
 Proof. Admitted.
 
-Hint Resolve u_subst_e_spec : lngen.
+Hint Resolve subst_e_spec : lngen.
 
-Lemma u_subst_u_spec :
+Lemma subst_u_spec :
 forall u1 u2 x1,
-  u_subst_u u2 x1 u1 = open_u_wrt_u (close_u_wrt_u x1 u1) u2.
+  subst_u u2 x1 u1 = open_u_wrt_u (close_u_wrt_u x1 u1) u2.
 Proof. Admitted.
 
-Hint Resolve u_subst_u_spec : lngen.
+Hint Resolve subst_u_spec : lngen.
 
 (* begin hide *)
 
-Lemma u_subst_e_u_subst_e_u_subst_u_u_subst_u_mutual :
+Lemma subst_e_subst_e_subst_u_subst_u_mutual :
 (forall e1 u1 u2 x2 x1,
-  x2 `notin` u_fv_u u1 ->
+  x2 `notin` fv_u u1 ->
   x2 <> x1 ->
-  u_subst_e u1 x1 (u_subst_e u2 x2 e1) = u_subst_e (u_subst_u u1 x1 u2) x2 (u_subst_e u1 x1 e1)) /\
+  subst_e u1 x1 (subst_e u2 x2 e1) = subst_e (subst_u u1 x1 u2) x2 (subst_e u1 x1 e1)) /\
 (forall u1 u2 u3 x2 x1,
-  x2 `notin` u_fv_u u2 ->
+  x2 `notin` fv_u u2 ->
   x2 <> x1 ->
-  u_subst_u u2 x1 (u_subst_u u3 x2 u1) = u_subst_u (u_subst_u u2 x1 u3) x2 (u_subst_u u2 x1 u1)).
+  subst_u u2 x1 (subst_u u3 x2 u1) = subst_u (subst_u u2 x1 u3) x2 (subst_u u2 x1 u1)).
 Proof. Admitted.
 
 (* end hide *)
 
-Lemma u_subst_e_u_subst_e :
+Lemma subst_e_subst_e :
 forall e1 u1 u2 x2 x1,
-  x2 `notin` u_fv_u u1 ->
+  x2 `notin` fv_u u1 ->
   x2 <> x1 ->
-  u_subst_e u1 x1 (u_subst_e u2 x2 e1) = u_subst_e (u_subst_u u1 x1 u2) x2 (u_subst_e u1 x1 e1).
+  subst_e u1 x1 (subst_e u2 x2 e1) = subst_e (subst_u u1 x1 u2) x2 (subst_e u1 x1 e1).
 Proof. Admitted.
 
-Hint Resolve u_subst_e_u_subst_e : lngen.
+Hint Resolve subst_e_subst_e : lngen.
 
-Lemma u_subst_u_u_subst_u :
+Lemma subst_u_subst_u :
 forall u1 u2 u3 x2 x1,
-  x2 `notin` u_fv_u u2 ->
+  x2 `notin` fv_u u2 ->
   x2 <> x1 ->
-  u_subst_u u2 x1 (u_subst_u u3 x2 u1) = u_subst_u (u_subst_u u2 x1 u3) x2 (u_subst_u u2 x1 u1).
+  subst_u u2 x1 (subst_u u3 x2 u1) = subst_u (subst_u u2 x1 u3) x2 (subst_u u2 x1 u1).
 Proof. Admitted.
 
-Hint Resolve u_subst_u_u_subst_u : lngen.
+Hint Resolve subst_u_subst_u : lngen.
 
 (* begin hide *)
 
-Lemma u_subst_e_close_e_wrt_u_rec_open_e_wrt_u_rec_u_subst_u_close_u_wrt_u_rec_open_u_wrt_u_rec_mutual :
+Lemma subst_e_close_e_wrt_u_rec_open_e_wrt_u_rec_subst_u_close_u_wrt_u_rec_open_u_wrt_u_rec_mutual :
 (forall e1 u1 x1 x2 n1,
-  x2 `notin` u_fv_e e1 ->
-  x2 `notin` u_fv_u u1 ->
+  x2 `notin` fv_e e1 ->
+  x2 `notin` fv_u u1 ->
   x2 <> x1 ->
   degree_u_wrt_u n1 u1 ->
-  u_subst_e u1 x1 e1 = close_e_wrt_u_rec n1 x2 (u_subst_e u1 x1 (open_e_wrt_u_rec n1 (u_var_f x2) e1))) *
+  subst_e u1 x1 e1 = close_e_wrt_u_rec n1 x2 (subst_e u1 x1 (open_e_wrt_u_rec n1 (u_var_f x2) e1))) *
 (forall u2 u1 x1 x2 n1,
-  x2 `notin` u_fv_u u2 ->
-  x2 `notin` u_fv_u u1 ->
+  x2 `notin` fv_u u2 ->
+  x2 `notin` fv_u u1 ->
   x2 <> x1 ->
   degree_u_wrt_u n1 u1 ->
-  u_subst_u u1 x1 u2 = close_u_wrt_u_rec n1 x2 (u_subst_u u1 x1 (open_u_wrt_u_rec n1 (u_var_f x2) u2))).
+  subst_u u1 x1 u2 = close_u_wrt_u_rec n1 x2 (subst_u u1 x1 (open_u_wrt_u_rec n1 (u_var_f x2) u2))).
 Proof. Admitted.
 
 (* end hide *)
 
 (* begin hide *)
 
-Lemma u_subst_e_close_e_wrt_u_rec_open_e_wrt_u_rec :
+Lemma subst_e_close_e_wrt_u_rec_open_e_wrt_u_rec :
 forall e1 u1 x1 x2 n1,
-  x2 `notin` u_fv_e e1 ->
-  x2 `notin` u_fv_u u1 ->
+  x2 `notin` fv_e e1 ->
+  x2 `notin` fv_u u1 ->
   x2 <> x1 ->
   degree_u_wrt_u n1 u1 ->
-  u_subst_e u1 x1 e1 = close_e_wrt_u_rec n1 x2 (u_subst_e u1 x1 (open_e_wrt_u_rec n1 (u_var_f x2) e1)).
+  subst_e u1 x1 e1 = close_e_wrt_u_rec n1 x2 (subst_e u1 x1 (open_e_wrt_u_rec n1 (u_var_f x2) e1)).
 Proof. Admitted.
 
-Hint Resolve u_subst_e_close_e_wrt_u_rec_open_e_wrt_u_rec : lngen.
+Hint Resolve subst_e_close_e_wrt_u_rec_open_e_wrt_u_rec : lngen.
 
 (* end hide *)
 
 (* begin hide *)
 
-Lemma u_subst_u_close_u_wrt_u_rec_open_u_wrt_u_rec :
+Lemma subst_u_close_u_wrt_u_rec_open_u_wrt_u_rec :
 forall u2 u1 x1 x2 n1,
-  x2 `notin` u_fv_u u2 ->
-  x2 `notin` u_fv_u u1 ->
+  x2 `notin` fv_u u2 ->
+  x2 `notin` fv_u u1 ->
   x2 <> x1 ->
   degree_u_wrt_u n1 u1 ->
-  u_subst_u u1 x1 u2 = close_u_wrt_u_rec n1 x2 (u_subst_u u1 x1 (open_u_wrt_u_rec n1 (u_var_f x2) u2)).
+  subst_u u1 x1 u2 = close_u_wrt_u_rec n1 x2 (subst_u u1 x1 (open_u_wrt_u_rec n1 (u_var_f x2) u2)).
 Proof. Admitted.
 
-Hint Resolve u_subst_u_close_u_wrt_u_rec_open_u_wrt_u_rec : lngen.
+Hint Resolve subst_u_close_u_wrt_u_rec_open_u_wrt_u_rec : lngen.
 
 (* end hide *)
 
-Lemma u_subst_e_close_e_wrt_u_open_e_wrt_u :
+Lemma subst_e_close_e_wrt_u_open_e_wrt_u :
 forall e1 u1 x1 x2,
-  x2 `notin` u_fv_e e1 ->
-  x2 `notin` u_fv_u u1 ->
+  x2 `notin` fv_e e1 ->
+  x2 `notin` fv_u u1 ->
   x2 <> x1 ->
   lc_u u1 ->
-  u_subst_e u1 x1 e1 = close_e_wrt_u x2 (u_subst_e u1 x1 (open_e_wrt_u e1 (u_var_f x2))).
+  subst_e u1 x1 e1 = close_e_wrt_u x2 (subst_e u1 x1 (open_e_wrt_u e1 (u_var_f x2))).
 Proof. Admitted.
 
-Hint Resolve u_subst_e_close_e_wrt_u_open_e_wrt_u : lngen.
+Hint Resolve subst_e_close_e_wrt_u_open_e_wrt_u : lngen.
 
-Lemma u_subst_u_close_u_wrt_u_open_u_wrt_u :
+Lemma subst_u_close_u_wrt_u_open_u_wrt_u :
 forall u2 u1 x1 x2,
-  x2 `notin` u_fv_u u2 ->
-  x2 `notin` u_fv_u u1 ->
+  x2 `notin` fv_u u2 ->
+  x2 `notin` fv_u u1 ->
   x2 <> x1 ->
   lc_u u1 ->
-  u_subst_u u1 x1 u2 = close_u_wrt_u x2 (u_subst_u u1 x1 (open_u_wrt_u u2 (u_var_f x2))).
+  subst_u u1 x1 u2 = close_u_wrt_u x2 (subst_u u1 x1 (open_u_wrt_u u2 (u_var_f x2))).
 Proof. Admitted.
 
-Hint Resolve u_subst_u_close_u_wrt_u_open_u_wrt_u : lngen.
+Hint Resolve subst_u_close_u_wrt_u_open_u_wrt_u : lngen.
 
-Lemma u_subst_u_u_lam :
+Lemma subst_u_u_lam :
 forall x2 t1 e1 u1 x1,
   lc_u u1 ->
-  x2 `notin` u_fv_u u1 `union` u_fv_e e1 `union` singleton x1 ->
-  u_subst_u u1 x1 (u_lam t1 e1) = u_lam (t1) (close_e_wrt_u x2 (u_subst_e u1 x1 (open_e_wrt_u e1 (u_var_f x2)))).
+  x2 `notin` fv_u u1 `union` fv_e e1 `union` singleton x1 ->
+  subst_u u1 x1 (u_lam t1 e1) = u_lam (t1) (close_e_wrt_u x2 (subst_e u1 x1 (open_e_wrt_u e1 (u_var_f x2)))).
 Proof. Admitted.
 
-Hint Resolve u_subst_u_u_lam : lngen.
+Hint Resolve subst_u_u_lam : lngen.
 
-Lemma u_subst_u_u_let :
+Lemma subst_u_u_let :
 forall x2 e1 u2 u1 x1,
   lc_u u1 ->
-  x2 `notin` u_fv_u u1 `union` u_fv_u u2 `union` singleton x1 ->
-  u_subst_u u1 x1 (u_let e1 u2) = u_let (u_subst_e u1 x1 e1) (close_u_wrt_u x2 (u_subst_u u1 x1 (open_u_wrt_u u2 (u_var_f x2)))).
+  x2 `notin` fv_u u1 `union` fv_u u2 `union` singleton x1 ->
+  subst_u u1 x1 (u_let e1 u2) = u_let (subst_e u1 x1 e1) (close_u_wrt_u x2 (subst_u u1 x1 (open_u_wrt_u u2 (u_var_f x2)))).
 Proof. Admitted.
 
-Hint Resolve u_subst_u_u_let : lngen.
+Hint Resolve subst_u_u_let : lngen.
 
 (* begin hide *)
 
-Lemma u_subst_e_intro_rec_u_subst_u_intro_rec_mutual :
+Lemma subst_e_intro_rec_subst_u_intro_rec_mutual :
 (forall e1 x1 u1 n1,
-  x1 `notin` u_fv_e e1 ->
-  open_e_wrt_u_rec n1 u1 e1 = u_subst_e u1 x1 (open_e_wrt_u_rec n1 (u_var_f x1) e1)) /\
+  x1 `notin` fv_e e1 ->
+  open_e_wrt_u_rec n1 u1 e1 = subst_e u1 x1 (open_e_wrt_u_rec n1 (u_var_f x1) e1)) /\
 (forall u1 x1 u2 n1,
-  x1 `notin` u_fv_u u1 ->
-  open_u_wrt_u_rec n1 u2 u1 = u_subst_u u2 x1 (open_u_wrt_u_rec n1 (u_var_f x1) u1)).
+  x1 `notin` fv_u u1 ->
+  open_u_wrt_u_rec n1 u2 u1 = subst_u u2 x1 (open_u_wrt_u_rec n1 (u_var_f x1) u1)).
 Proof. Admitted.
 
 (* end hide *)
 
-Lemma u_subst_e_intro_rec :
+Lemma subst_e_intro_rec :
 forall e1 x1 u1 n1,
-  x1 `notin` u_fv_e e1 ->
-  open_e_wrt_u_rec n1 u1 e1 = u_subst_e u1 x1 (open_e_wrt_u_rec n1 (u_var_f x1) e1).
+  x1 `notin` fv_e e1 ->
+  open_e_wrt_u_rec n1 u1 e1 = subst_e u1 x1 (open_e_wrt_u_rec n1 (u_var_f x1) e1).
 Proof. Admitted.
 
-Hint Resolve u_subst_e_intro_rec : lngen.
-Hint Rewrite u_subst_e_intro_rec using solve [auto] : lngen.
+Hint Resolve subst_e_intro_rec : lngen.
+Hint Rewrite subst_e_intro_rec using solve [auto] : lngen.
 
-Lemma u_subst_u_intro_rec :
+Lemma subst_u_intro_rec :
 forall u1 x1 u2 n1,
-  x1 `notin` u_fv_u u1 ->
-  open_u_wrt_u_rec n1 u2 u1 = u_subst_u u2 x1 (open_u_wrt_u_rec n1 (u_var_f x1) u1).
+  x1 `notin` fv_u u1 ->
+  open_u_wrt_u_rec n1 u2 u1 = subst_u u2 x1 (open_u_wrt_u_rec n1 (u_var_f x1) u1).
 Proof. Admitted.
 
-Hint Resolve u_subst_u_intro_rec : lngen.
-Hint Rewrite u_subst_u_intro_rec using solve [auto] : lngen.
+Hint Resolve subst_u_intro_rec : lngen.
+Hint Rewrite subst_u_intro_rec using solve [auto] : lngen.
 
-Lemma u_subst_e_intro :
+Lemma subst_e_intro :
 forall x1 e1 u1,
-  x1 `notin` u_fv_e e1 ->
-  open_e_wrt_u e1 u1 = u_subst_e u1 x1 (open_e_wrt_u e1 (u_var_f x1)).
+  x1 `notin` fv_e e1 ->
+  open_e_wrt_u e1 u1 = subst_e u1 x1 (open_e_wrt_u e1 (u_var_f x1)).
 Proof. Admitted.
 
-Hint Resolve u_subst_e_intro : lngen.
+Hint Resolve subst_e_intro : lngen.
 
-Lemma u_subst_u_intro :
+Lemma subst_u_intro :
 forall x1 u1 u2,
-  x1 `notin` u_fv_u u1 ->
-  open_u_wrt_u u1 u2 = u_subst_u u2 x1 (open_u_wrt_u u1 (u_var_f x1)).
+  x1 `notin` fv_u u1 ->
+  open_u_wrt_u u1 u2 = subst_u u2 x1 (open_u_wrt_u u1 (u_var_f x1)).
 Proof. Admitted.
 
-Hint Resolve u_subst_u_intro : lngen.
+Hint Resolve subst_u_intro : lngen.
 
 
 (* *********************************************************************** *)

@@ -29,10 +29,10 @@ p :: 'p_' ::= {{ com primitives }}
 | - :: :: minus
 
 substitutions
-  single u x :: u_subst
+  single u x :: subst
 
 freevars
-  u x :: u_fv
+  u x :: fv
 
 grammar
 G {{ tex \Gamma }} :: 'g_' ::= {{ com contexts }} {{ coq list (x * t) }}

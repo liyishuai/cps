@@ -97,39 +97,39 @@ with lc_e : e -> Prop :=    (* defn lc_e *)
      (lc_u u5) ->
      (lc_e (e_ann u5 t5)).
 (** free variables *)
-Fixpoint u_fv_u (u_6:u) : vars :=
+Fixpoint fv_u (u_6:u) : vars :=
   match u_6 with
   | (u_var_b nat) => {}
   | (u_var_f x5) => {{x5}}
   | (u_int i5) => {}
-  | (u_lam t5 e5) => (u_fv_e e5)
-  | (u_app e1 e2) => (u_fv_e e1) \u (u_fv_e e2)
-  | (u_prim e1 p5 e2) => (u_fv_e e1) \u (u_fv_e e2)
-  | (u_if0 e1 e2 e3) => (u_fv_e e1) \u (u_fv_e e2) \u (u_fv_e e3)
-  | (u_let e5 u5) => (u_fv_e e5) \u (u_fv_u u5)
-  | (u_halt e5) => (u_fv_e e5)
+  | (u_lam t5 e5) => (fv_e e5)
+  | (u_app e1 e2) => (fv_e e1) \u (fv_e e2)
+  | (u_prim e1 p5 e2) => (fv_e e1) \u (fv_e e2)
+  | (u_if0 e1 e2 e3) => (fv_e e1) \u (fv_e e2) \u (fv_e e3)
+  | (u_let e5 u5) => (fv_e e5) \u (fv_u u5)
+  | (u_halt e5) => (fv_e e5)
 end
-with u_fv_e (e5:e) : vars :=
+with fv_e (e5:e) : vars :=
   match e5 with
-  | (e_ann u5 t5) => (u_fv_u u5)
+  | (e_ann u5 t5) => (fv_u u5)
 end.
 
 (** substitutions *)
-Fixpoint u_subst_u (u_6:u) (x_6:x) (u__7:u) {struct u__7} : u :=
+Fixpoint subst_u (u_6:u) (x_6:x) (u__7:u) {struct u__7} : u :=
   match u__7 with
   | (u_var_b nat) => u_var_b nat
   | (u_var_f x5) => (if eq_var x5 x_6 then u_6 else (u_var_f x5))
   | (u_int i5) => u_int i5
-  | (u_lam t5 e5) => u_lam t5 (u_subst_e u_6 x_6 e5)
-  | (u_app e1 e2) => u_app (u_subst_e u_6 x_6 e1) (u_subst_e u_6 x_6 e2)
-  | (u_prim e1 p5 e2) => u_prim (u_subst_e u_6 x_6 e1) p5 (u_subst_e u_6 x_6 e2)
-  | (u_if0 e1 e2 e3) => u_if0 (u_subst_e u_6 x_6 e1) (u_subst_e u_6 x_6 e2) (u_subst_e u_6 x_6 e3)
-  | (u_let e5 u5) => u_let (u_subst_e u_6 x_6 e5) (u_subst_u u_6 x_6 u5)
-  | (u_halt e5) => u_halt (u_subst_e u_6 x_6 e5)
+  | (u_lam t5 e5) => u_lam t5 (subst_e u_6 x_6 e5)
+  | (u_app e1 e2) => u_app (subst_e u_6 x_6 e1) (subst_e u_6 x_6 e2)
+  | (u_prim e1 p5 e2) => u_prim (subst_e u_6 x_6 e1) p5 (subst_e u_6 x_6 e2)
+  | (u_if0 e1 e2 e3) => u_if0 (subst_e u_6 x_6 e1) (subst_e u_6 x_6 e2) (subst_e u_6 x_6 e3)
+  | (u_let e5 u5) => u_let (subst_e u_6 x_6 e5) (subst_u u_6 x_6 u5)
+  | (u_halt e5) => u_halt (subst_e u_6 x_6 e5)
 end
-with u_subst_e (u_6:u) (x5:x) (e5:e) {struct e5} : e :=
+with subst_e (u_6:u) (x5:x) (e5:e) {struct e5} : e :=
   match e5 with
-  | (e_ann u5 t5) => e_ann (u_subst_u u_6 x5 u5) t5
+  | (e_ann u5 t5) => e_ann (subst_u u_6 x5 u5) t5
 end.
 
 
