@@ -60,4 +60,21 @@ Inductive kexp : e -> e -> e -> Prop :=
                                                                                       (ktype t2)))
                                                                         (t_arr (kcont t2) t_void)) k)
                                                           t_void)))))
+| exp_prim : forall e1 e1' e2 e2' c1 c2 p ty k,
+    c1 `notin` (fv_e e1) ->
+    c2 `notin` (fv_e e2) ->
+    let ct := u_var_f c1 in
+    kexp e1 (e_ann ct (kcont t_int)) (open_e_wrt_u e1' ct) ->
+    let ct := u_var_f c2 in
+    kexp e2 (e_ann ct (kcont t_int)) (open_e_wrt_u e2' ct) ->
+    kexp (e_ann (u_prim e1 p e2) ty) k
+         (open_e_wrt_u e1'
+                       (u_lam t_int
+                              (open_e_wrt_u e2'
+                                            (u_lam t_int
+                                                   (e_ann (u_let (e_ann (u_prim (e_ann (u_var_b 2) t_int) p
+                                                                                (e_ann (u_var_b 1) t_int))
+                                                                        t_int)
+                                                                 (u_app k (e_ann (u_var_b 0) t_int)))
+                                                          t_void)))))
 .
