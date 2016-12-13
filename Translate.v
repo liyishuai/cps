@@ -1,15 +1,16 @@
 Require Export k_ott.
 Require Export k_inf.
 
+Reserved Notation "'kcont' ty" (at level 75).
+
 Fixpoint ktype ty :=
   match ty with
   | t_int => t_int
-  | t_arr t1 t2 => t_arr t1 (t_arr (ktype t2) t_void)
+  | t_arr t1 t2 => t_arr t1 (t_arr (kcont t2) t_void)
   | t_void => t_void
-  end.
+  end
 
-Definition kcont ty :=
-  t_arr (ktype ty) t_void.
+where "'kcont' ty" := (t_arr (ktype ty) t_void).
 
 Inductive kexp : e -> e -> e -> Prop :=
 | exp_var : forall y ty k,
@@ -27,20 +28,36 @@ Inductive kexp : e -> e -> e -> Prop :=
     e2 = (e_ann u2 t2) ->
     x1 `notin` (fv_u ut) ->
     c1 `notin` (fv_u ut) ->
-    (forall k',
         let xt := u_var_f x1 in
         let ct := u_var_f c1 in
-        kexp (open_e_wrt_u (open_e_wrt_u e2 xt) ct) k' (open_e_wrt_u (open_e_wrt_u e' xt) ct)) ->
+        kexp (open_e_wrt_u e2 xt) (e_ann ct (kcont t2)) (open_e_wrt_u (open_e_wrt_u e' xt) ct) ->
     kexp (e_ann ut (t_arr t1 t2)) k
          (e_ann (u_app k
                        (e_ann
                           (u_lam (ktype t1)
                                  (e_ann (u_lam (kcont t2)
-                                               (e_ann (u_app e'
-                                                             (e_ann (u_var_b 0)
-                                                                    (kcont t2)))
-                                                      t_void))
+                                               (open_e_wrt_u e' (u_var_b 0)))
                                         (kcont t2)))
                           (kcont (t_arr t1 t2))))
                 t_void)
+| exp_app : forall e1 e1' u1 t1 e2 e2' u2 t2 c1 c2 ty k,
+    e1 = e_ann u1 t1 ->
+    e2 = e_ann u2 t2 ->
+    c1 `notin` (fv_e e1) ->
+    c2 `notin` (fv_e e2) ->
+    let ct := u_var_f c1 in
+    kexp e1 (e_ann ct (kcont t1)) (open_e_wrt_u e1' ct) ->
+    let ct := u_var_f c2 in
+    kexp e2 (e_ann ct (kcont t2)) (open_e_wrt_u e2' ct) ->
+    kexp (e_ann (u_app e1 e2) ty) k
+         (open_e_wrt_u e1'
+                       (u_lam (ktype t1)
+                              (open_e_wrt_u e2'
+                                            (u_lam (ktype t2)
+                                                   (e_ann (u_app (e_ann (u_app (e_ann (u_var_b 1)
+                                                                                      (ktype t1))
+                                                                               (e_ann (u_var_b 0)
+                                                                                      (ktype t2)))
+                                                                        (t_arr (kcont t2) t_void)) k)
+                                                          t_void)))))
 .
