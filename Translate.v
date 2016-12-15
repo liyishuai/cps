@@ -105,3 +105,70 @@ Inductive kprog : e -> e -> Prop :=
                         (u_lam (ktype ty)
                                (e_ann (u_halt (e_ann (u_var_b 0) (ktype ty)))
                                       t_void))).
+
+Fixpoint ke e k :=
+  match e with
+  | e_ann u t =>
+    match u with
+    | u_var_f x =>
+      e_ann (u_app k (e_ann (u_var_f x)
+                            (ktype t)))
+            t_void
+    | u_int i =>
+      e_ann (u_app k (e_ann (u_int i)
+                            (ktype t)))
+            t_void
+    | u_lam t1 e2 =>
+      match e2 with
+      | e_ann u2 t2 =>
+        e_ann (u_app k (e_ann (u_lam (kcont t1)
+                                     (e_ann (u_lam (kcont t2)
+                                                   (ke e2 (e_ann (u_var_b 0)
+                                                                 (kcont t2))))
+                                            (t_arr (kcont t2) t_void)))
+                              (ktype t)))
+              t_void
+      end
+    | u_app e1 e2 =>
+      match e1,e2 with
+      | e_ann u1 t1, e_ann u2 t2 =>
+        ke e1 (e_ann (u_lam (ktype t1)
+                            (ke e2 (e_ann (u_lam (ktype t2)
+                                                 (e_ann (u_app (e_ann (u_app (e_ann (u_var_b 1) (ktype t1))
+                                                                             (e_ann (u_var_b 0) (ktype t2)))
+                                                                      (t_arr (kcont t) t_void))
+                                                               k)
+                                                        t_void))
+                                          (kcont t2))))
+                     (kcont t1))
+      end
+    | u_prim e1 p e2 =>
+      ke e1 (e_ann (u_lam t_int
+                          (ke e2 (e_ann (u_lam t_int
+                                               (e_ann (u_let (e_ann (u_prim (e_ann (u_var_b 1) t_int) p
+                                                                            (e_ann (u_var_b 0) t_int))
+                                                                    t_int)
+                                                             (u_app k (e_ann (u_var_b 0) t_int)))
+                                                      t_void))
+                                        (kcont t_int))))
+                   (kcont t_int))
+    | u_if0 e1 e2 e3 =>
+      ke e1 (e_ann (u_lam t_int
+                          (e_ann (u_if0 (e_ann (u_var_b 0) t_int)
+                                        (ke e2 k)
+                                        (ke e3 k))
+                                 t_void))
+                   (kcont t_int))
+    | _ => e
+    end
+  end.
+
+Definition kp e1 :=
+  match e1 with
+  | e_ann u1 t1 =>
+    ke e1 (e_ann (u_lam (ktype t1)
+                        (e_ann (u_halt (e_ann (u_var_b 0)
+                                              (ktype t1)))
+                               t_void))
+                 (kcont t1))
+  end.
