@@ -21,4 +21,14 @@ Proof.
     constructor.
     constructor; auto.
     constructor.
+    constructor.
+    intros x1.
+    apply lc_e_of_degree.
+    apply degree_e_wrt_u_open_e_wrt_u; auto.
+    constructor.
+    constructor.
+    rewrite open_e_wrt_u_lc_e; auto.
+    apply degree_e_wrt_u_O.
+    apply degree_e_wrt_u_of_lc_e; auto.
+  -
 Abort.
