@@ -30,13 +30,16 @@ Inductive kexp : e -> e -> e -> Prop :=
         let xt := u_var_f x1 in
         let ct := u_var_f c1 in
         kexp (open_e_wrt_u e2 xt) (e_ann ct (kcont t2)) (open_e_wrt_u (open_e_wrt_u e' xt) ct)) ->
-    lc_e e' ->
+    (forall xt ct,
+       lc_u xt ->
+       lc_u ct ->
+       lc_e (open_e_wrt_u (open_e_wrt_u e' xt) ct)) ->
     kexp (e_ann ut (t_arr t1 t2)) k
          (e_ann (u_app k
                        (e_ann
                           (u_lam (ktype t1)
                                  (e_ann (u_lam (kcont t2)
-                                               (open_e_wrt_u e' (u_var_b 0)))
+                                               e')
                                         (kcont t2)))
                           (kcont (t_arr t1 t2))))
                 t_void)
@@ -49,8 +52,12 @@ Inductive kexp : e -> e -> e -> Prop :=
     (forall c2, c2 `notin` (fv_e e2) ->
     let ct := u_var_f c2 in
     kexp e2 (e_ann ct (kcont t2)) (open_e_wrt_u e2' ct)) ->
-    lc_e e1' ->
-    lc_e e2' ->
+    (forall ct,
+       lc_u ct ->
+       lc_e (open_e_wrt_u e1' ct)) ->
+    (forall ct,
+       lc_u ct ->
+       lc_e (open_e_wrt_u e2' ct)) ->
     kexp (e_ann (u_app e1 e2) ty) k
          (open_e_wrt_u e1'
                        (u_lam (ktype t1)
@@ -69,8 +76,12 @@ Inductive kexp : e -> e -> e -> Prop :=
     (forall c2, c2 `notin` (fv_e e2) ->
     let ct := u_var_f c2 in
     kexp e2 (e_ann ct (kcont t_int)) (open_e_wrt_u e2' ct)) ->
-    lc_e e1' ->
-    lc_e e2' ->
+    (forall ct,
+       lc_u ct ->
+       lc_e (open_e_wrt_u e1' ct)) ->
+    (forall ct,
+       lc_u ct ->
+       lc_e (open_e_wrt_u e2' ct)) ->
     kexp (e_ann (u_prim e1 p e2) ty) k
          (open_e_wrt_u e1'
                        (u_lam t_int
@@ -87,7 +98,9 @@ Inductive kexp : e -> e -> e -> Prop :=
     kexp e1 (e_ann ct (kcont t_int)) (open_e_wrt_u e1' ct)) ->
     kexp e2 k e2' ->
     kexp e3 k e3' ->
-    lc_e e1' ->
+    (forall ct,
+       lc_u ct ->
+       lc_e (open_e_wrt_u e1' ct)) ->
     lc_e e2' ->
     lc_e e3' ->
     kexp (e_ann (u_if0 e1 e2 e3) ty) k
