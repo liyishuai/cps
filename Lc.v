@@ -1,5 +1,3 @@
-Require Import k_ott.
-Require Import k_inf.
 Require Import Translate.
 
 Theorem lc_exp :
@@ -10,10 +8,17 @@ Theorem lc_exp :
       kexp ef k ek ->
       lc_e ek.
 Proof.
-  intros ef Hlcf.
-  induction Hlcf; intros k ek Hlck Hexp; inversion Hexp; subst; auto.
-  - constructor.
+  destruct ef.
+  induction u5; intros Hlcf k ek Hlck Hexp.
+  - inversion Hexp; subst.
+    inversion H1.
+  - inversion Hexp; subst; repeat constructor; auto.
+    inversion H1.
+  - inversion Hexp; subst; repeat constructor; auto.
+    inversion H1.
+  - inversion Hexp; subst.
+    inversion H1; subst.
     constructor.
-    + assumption.
-    + 
+    constructor; auto.
+    constructor.
 Abort.
