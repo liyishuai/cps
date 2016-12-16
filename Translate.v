@@ -22,7 +22,7 @@ Inductive kexp : e -> e -> e -> Prop :=
          (e_ann (u_app k (e_ann (u_int n)
                                 (ktype ty)))
                 t_void)
-| exp_lam : forall ut t1 e2 u2 t2 e' k,
+| exp_lam : forall ut t1 e2 u2 t2 e' ty k,
     ut = u_lam t1 e2 ->
     e2 = (e_ann u2 t2) ->
     (forall x1 c1, x1 `notin` (fv_u ut) ->
@@ -34,14 +34,14 @@ Inductive kexp : e -> e -> e -> Prop :=
        lc_u xt ->
        lc_u ct ->
        lc_e (open_e_wrt_u (open_e_wrt_u e' xt) ct)) ->
-    kexp (e_ann ut (t_arr t1 t2)) k
+    kexp (e_ann ut ty) k
          (e_ann (u_app k
                        (e_ann
                           (u_lam (ktype t1)
                                  (e_ann (u_lam (kcont t2)
                                                e')
-                                        (kcont t2)))
-                          (kcont (t_arr t1 t2))))
+                                        (t_arr (kcont t2) t_void)))
+                          (kcont ty)))
                 t_void)
 | exp_app : forall e1 e1' u1 t1 e2 e2' u2 t2 ty k,
     e1 = e_ann u1 t1 ->
