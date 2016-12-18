@@ -10,3 +10,19 @@ Proof.
   - repeat econstructor.
   - destruct e5.
 Abort.
+
+Theorem preservation : forall Gamma et ty pk,
+    Gamma = nil ->
+    T_ant Gamma et ty ->
+    kprog et pk ->
+    K_ant Gamma pk t_void.
+Proof.
+  intros Gamma et ty pk Hnil Ht.
+  remember Gamma as Gm.
+  inversion Ht; subst.
+  induction H; subst.
+  - fsetdec.
+  - intros.
+    inversion H; subst.
+    inversion H0; subst.
+Abort.
